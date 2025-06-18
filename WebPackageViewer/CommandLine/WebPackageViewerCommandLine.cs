@@ -48,24 +48,26 @@ namespace WebPackageViewer.CommandLine
             }
             catch { }
 
-            SourcePath = ParseStringParameterSwitch("-s", null);
-            OutputPath = ParseStringParameterSwitch("-o", "outputPath");            
-            ExeFile = ParseStringParameterSwitch("-x", null);
+            SourcePath = ParseStringParameterSwitch("--source", null);
+            OutputPath = ParseStringParameterSwitch("--output", null);            
+            ExeFile = ParseStringParameterSwitch("--exe", null);
             if (string.IsNullOrEmpty(ExeFile)) 
                 ExeFile = typeof(App).Assembly.Location;
 
-            ZipFilename = ParseStringParameterSwitch("-z", null);
+            ZipFilename = ParseStringParameterSwitch("--zipfile", null);
             if (string.IsNullOrEmpty(ZipFilename))
             {
                 // Zipfolder is not used if a Zip file is provided
                 ZipFolder = ParseStringParameterSwitch("--zipfolder", null);
             }
-            PackageFile = ParseStringParameterSwitch("-p", "packageFile");
-            VirtualPath = ParseStringParameterSwitch("-v", null);
-            InitialUrl = ParseStringParameterSwitch("-u", null);
+            PackageFile = ParseStringParameterSwitch("--package", "packageFile");
+            VirtualPath = ParseStringParameterSwitch("--virtual", null);
+            InitialUrl = ParseStringParameterSwitch("--initialurl", null);
 
 
-            var first = FirstParameter.ToLowerInvariant();
+            var first = FirstParameter?.ToLowerInvariant() ?? string.Empty;
+            if (first.StartsWith("-"))
+                first = string.Empty; // ignore any switches - only folder or commands are valid
 
             if (first == "package")
             {
@@ -76,7 +78,7 @@ namespace WebPackageViewer.CommandLine
 
                 var pack = new FilePackager();
                 if (!string.IsNullOrEmpty(ZipFolder))
-                {
+                {                                     
                     zipFile = pack.ZipFolder(ZipFolder);
                     if (zipFile == null)
                     {
@@ -138,16 +140,17 @@ namespace WebPackageViewer.CommandLine
 
                 ColorConsole.WriteLine("\nCommands:", ConsoleColor.Green);
                 ColorConsole.WriteLine("  package   - Create a package from an executable and a zip file", ConsoleColor.White);
-                ColorConsole.WriteLine("  unpackage - Unpackage a file into its components", ConsoleColor.White);
+                ColorConsole.WriteLine("  unpackage - Unpackage the Exe and Website into the output folder", ConsoleColor.White);
                 ColorConsole.WriteLine("  help      - Show this help message", ConsoleColor.White);
 
                 ColorConsole.WriteLine("\nOptions:", ConsoleColor.Green);
-                ColorConsole.WriteLine("  -o   - Package: Output path for the packaged exe\n" +
-                                       "         Unpackage: Output folder where the Web site and Exe to run is unpackaged to", ConsoleColor.White);
-                ColorConsole.WriteLine("  -x   - Optional Exe file to package. If not specified source exe is used", ConsoleColor.White);
-                ColorConsole.WriteLine("  -z   - The Zip File to package", ConsoleColor.White);
-                ColorConsole.WriteLine("  -v   - Virtual Path when running the site (/*, /docs)");
-                ColorConsole.WriteLine("  -u   - Initial URL to load in the WebView (/index.html*, /docs/index.html)", ConsoleColor.White);
+                ColorConsole.WriteLine("  --output     - package: Output filename for the packaged exe\n" +
+                                       "                 unpackage: Output folder where the Web site and Exe is unpackaged to", ConsoleColor.White);
+                ColorConsole.WriteLine("  --exe        - Optional Exe file to package. If not specified source exe is used", ConsoleColor.White);
+                ColorConsole.WriteLine("  --zipfile    - An existing Zip File to package (priortized over --zipfolder)", ConsoleColor.White);
+                ColorConsole.WriteLine("  --zipfolder  - A folder to zip up and then package", ConsoleColor.White);
+                ColorConsole.WriteLine("  --virtual    - Virtual Path when running the site (/,/docs)");
+                ColorConsole.WriteLine("  --initialurl - Initial URL to load in the WebView (/index.html, /docs/index.html)", ConsoleColor.White);
 
                 Console.WriteLine("\n");
 

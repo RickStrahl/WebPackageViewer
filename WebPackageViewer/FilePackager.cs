@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Navigation;
 using WebPackageViewer.Utilities;
 
 namespace WebPackageViewer
@@ -163,8 +158,8 @@ namespace WebPackageViewer
 
             if (unZip)
             {
-               UnZipPackageInplace(packageFile, outputPath);
-               File.Delete(packageFile);
+                UnZipPackageInplace(packageFile, outputPath);
+                try { File.Delete(packageFile); } catch { /* ignore */ }
             }
 
             return true;

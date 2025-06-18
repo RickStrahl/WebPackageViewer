@@ -8,7 +8,7 @@
     },
     "Package Mode": {
       "commandName": "Project",
-      "commandLineArgs": "package -o WebViewPackager-Packaged.exe -d WebPackageViewer.exe --zipfolder .\\",
+      "commandLineArgs": "package --output WebViewPackager-Packaged.exe --exe \"d:\\projects\\WebPackageViewer\\WebPackageViewer.exe\" --zipfolder .\\",
       "workingDirectory": "C:\\Users\\rstrahl\\Documents\\Documentation Monster\\WebSurge\\wwwroot"
     },
     "Package Mode 2": {
@@ -18,7 +18,7 @@
     },
     "Package ZipFolder": {
       "commandName": "Project",
-      "commandLineArgs": "package -o \"C:\\temp\\WebSurge-Documentation-Viewer.exe\" -x \"d:\\projects\\WebPackageViewer\\WebPackageViewer.exe\"  --zipfolder \"C:\\Users\\rstrahl\\Documents\\Documentation Monster\\WebSurge\\wwwroot\"",      
+      "commandLineArgs": "package --output \"C:\\temp\\WebSurge-Documentation-Viewer.exe\" --exe \"d:\\projects\\WebPackageViewer\\WebPackageViewer.exe\"  --zipfolder \"C:\\Users\\rstrahl\\Documents\\Documentation Monster\\WebSurge\\wwwroot\"",      
     },
     "Help Mode": {
       "commandName": "Project",
