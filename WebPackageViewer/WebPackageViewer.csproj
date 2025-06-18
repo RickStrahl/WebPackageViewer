@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net472</TargetFramework>	
+		<UseWPF>true</UseWPF>
+		<Version>1.0</Version>
+		<PublishSingleFile>true</PublishSingleFile>
+		<SelfContained>false</SelfContained>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<PublishTrimmed>false</PublishTrimmed>
+		<ApplicationIcon>WebPackageViewer.ico</ApplicationIcon>
+
+		<Title>Web Package Viewer</Title>
+		<Product>Web Package Viewer</Product>
+		<FileDescription>Web Package Viewer</FileDescription>
+		<Authors>Rick Strahl</Authors>
+		<Company>West Wind Technologies</Company>
+		<Copyright>© Rick Strahl - West Wind Technologies, 2023-2025</Copyright>
+		<Description>Web Package Viewer is local Web Site self-contained, packaging tool that allows you to run and view a static Web site including all dependencies without requiring a web server. Can load local data, and make client side local Http requests.</Description>
+		<PackageIcon>icon.png</PackageIcon>
+		<PlatformTarget>AnyCPU</PlatformTarget>		
+	</PropertyGroup>
+	
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2957.106" />	
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="index.html">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+				
+	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	  <Exec Command="pwsh -ExecutionPolicy Bypass -File ..\install\build.ps1" />
+	</Target>
+
+</Project>

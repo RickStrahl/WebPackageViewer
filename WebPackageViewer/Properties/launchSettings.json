@@ -1,0 +1,31 @@
+{
+  "profiles": {
+    "Viewer Mode": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\rstrahl\\Documents\\Documentation Monster\\WebSurge\\wwwroot",
+      "commandLineArgs": "-v /docs -u /docs/index.html"
+
+    },
+    "Package Mode": {
+      "commandName": "Project",
+      "commandLineArgs": "package -o WebViewPackager-Packaged.exe -d WebPackageViewer.exe --zipfolder .\\",
+      "workingDirectory": "C:\\Users\\rstrahl\\Documents\\Documentation Monster\\WebSurge\\wwwroot"
+    },
+    "Package Mode 2": {
+      "commandName": "Project",
+      "commandLineArgs": "package -o \"C:\\Users\\rstrahl\\Documents\\Documentation Monster\\WebSurge\\wwwroot\\WebSurge-Documentation-Viewer.exe\" -z \"c:\\Temp\\TMPLOCAL\\West Wind WebSurge-Viewer.zip\"",
+      "workingDirectory": "C:\\Users\\rstrahl\\Documents\\Documentation Monster\\WebSurge\\wwwroot"
+    },
+    "Package ZipFolder": {
+      "commandName": "Project",
+      "commandLineArgs": "package -o \"C:\\temp\\WebSurge-Documentation-Viewer.exe\" -x \"d:\\projects\\WebPackageViewer\\WebPackageViewer.exe\"  --zipfolder \"C:\\Users\\rstrahl\\Documents\\Documentation Monster\\WebSurge\\wwwroot\"",      
+    },
+    "Help Mode": {
+      "commandName": "Project",
+      "commandLineArgs": "help",
+      "workingDirectory": "C:\\Users\\rstrahl\\Documents\\Documentation Monster\\WebSurge\\wwwroot"
+    }
+
+
+  }
+}
