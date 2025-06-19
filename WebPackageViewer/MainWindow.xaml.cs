@@ -28,6 +28,17 @@ namespace WebPackageViewer
             OutputFolder = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(ExeFile) + "_WebViewer");
 
             Title = Configuration.WindowTitle;
+
+            if (!string.IsNullOrEmpty(config.WindowSize) && config.WindowSize.Contains("x"))
+            {
+                var parts = config.WindowSize.Split('x');
+                if (parts.Length == 2 && int.TryParse(parts[0], out int width) && int.TryParse(parts[1], out int height))
+                {
+                    Width = width;
+                    Height = height;
+                }
+            }            
+
         }        
 
 

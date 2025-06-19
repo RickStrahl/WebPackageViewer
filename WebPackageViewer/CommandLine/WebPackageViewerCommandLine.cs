@@ -166,7 +166,8 @@ namespace WebPackageViewer.CommandLine
 {
     ""VirtualPath"": ""/docs"",
     ""InitialUrl"": ""/docs/index.html"",
-    ""Window Title"": ""West Wind Web Package Viewer""    
+    ""Window Title"": ""West Wind Web Package Viewer"",
+    ""WindowSize"": ""1280x800""
 }";
                 ColorConsole.WriteLine(json, ConsoleColor.DarkGray);
 

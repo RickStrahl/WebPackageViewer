@@ -18,7 +18,8 @@
 		<Copyright>© Rick Strahl - West Wind Technologies, 2023-2025</Copyright>
 		<Description>Web Package Viewer is local Web Site self-contained, packaging tool that allows you to run and view a static Web site including all dependencies without requiring a web server. Can load local data, and make client side local Http requests.</Description>
 		<PackageIcon>icon.png</PackageIcon>
-		<PlatformTarget>AnyCPU</PlatformTarget>		
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
 	</PropertyGroup>
 	
 

@@ -33,8 +33,6 @@ The following command line options are available:
 ----------------------------
 West Wind Web Package Viewer
 ----------------------------
-A Web Site Viewer that can:
-
 Usage: WebPackageViewer [foldername | command] [options]
 
 Foldername:
@@ -54,7 +52,6 @@ Options:
   --zipfolder  - A folder to zip up and then package
   --virtual    - Virtual Path when running the site (/*, /docs)
   --initialurl - Initial URL to load in the WebView (/index.html*, /docs/index.html)
-
 
 Configuration File
 You can optionally provide a configuration in your Webroot Folder

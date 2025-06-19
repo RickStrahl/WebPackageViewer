@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
+using System.Windows;
 using WebPackageViewer.Utilities;
 
 namespace WebPackageViewer
@@ -154,13 +156,19 @@ namespace WebPackageViewer
             {
                 fs.Seek(offset, SeekOrigin.Begin);
                 fs.CopyTo(packageFs);
+                packageFs.Flush();
             }
 
             if (unZip)
             {
-                UnZipPackageInplace(packageFile, outputPath);
+                if (!UnZipPackageInplace(packageFile, outputPath)) 
+                {
+                    return false;
+                }
                 try { File.Delete(packageFile); } catch { /* ignore */ }
             }
+
+            
 
             return true;
         }
@@ -172,7 +180,7 @@ namespace WebPackageViewer
                 outputPath = Path.GetDirectoryName(packageFilename);
 
             try
-            {
+            {               
                 ZipFile.ExtractToDirectory(packageFilename, outputPath);
             }
             catch (Exception ex)

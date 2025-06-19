@@ -12,6 +12,8 @@ namespace WebPackageViewer
 
         public string WindowTitle { get; set; } = "West Wind Web Package Viewer";
 
+        public string WindowSize { get; set; } = "1280x800"; // Default size
+        
         public WebViewerConfiguration(string webRootPath = null, string virtualPath = null)
         {
             if (!string.IsNullOrEmpty(webRootPath))
@@ -35,7 +37,8 @@ namespace WebPackageViewer
                 config.WebRootPath = json.ExtractString("\"WebRootPath\": \"", "\",", false)?.Trim();
                 config.InitialUrl = json.ExtractString("\"InitialUrl\": \"", "\"", false)?.Trim();
                 config.VirtualPath = json.ExtractString("\"VirtualPath\": \"", "\"", false)?.Trim();
-                config.WindowTitle = json.ExtractString("\"WindowTitle\": \"", "\"", false)?.Trim();                
+                config.WindowTitle = json.ExtractString("\"WindowTitle\": \"", "\"", false)?.Trim();
+                config.WindowSize = json.ExtractString("\"WindowSize\": \"", "\"", false)?.Trim();
             }
 
             if (existingConfig != null)
