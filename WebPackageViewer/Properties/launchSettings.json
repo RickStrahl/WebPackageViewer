@@ -2,19 +2,19 @@
   "profiles": {
     "Viewer Mode": {
       "commandName": "Project",
-      "workingDirectory": "C:\\Users\\rstrahl\\Documents\\Documentation Monster\\WebSurge\\wwwroot",
+      "workingDirectory": "%USERPROFILE%\\Documents\\Documentation Monster\\WebSurge\\wwwroot",
       "commandLineArgs": "-v /docs -u /docs/index.html"
 
     },
     "Package Mode": {
       "commandName": "Project",
-      "commandLineArgs": "package --output WebViewPackager-Packaged.exe --exe \"d:\\projects\\WebPackageViewer\\WebPackageViewer.exe\" --zipfolder .\\",
-      "workingDirectory": "C:\\Users\\rstrahl\\Documents\\Documentation Monster\\WebSurge\\wwwroot"
+      "commandLineArgs": "package --output WebViewPackager-Packaged.exe --exe \"c:\\projects\\WebPackageViewer\\WebPackageViewer.exe\" --zipfolder .\\",
+      "workingDirectory": "%USERPROFILE%\\Documents\\Documentation Monster\\WebSurge\\wwwroot"
     },
     "Package Mode 2": {
       "commandName": "Project",
-      "commandLineArgs": "package -o \"C:\\Users\\rstrahl\\Documents\\Documentation Monster\\WebSurge\\wwwroot\\WebSurge-Documentation-Viewer.exe\" -z \"c:\\Temp\\TMPLOCAL\\West Wind WebSurge-Viewer.zip\"",
-      "workingDirectory": "C:\\Users\\rstrahl\\Documents\\Documentation Monster\\WebSurge\\wwwroot"
+      "commandLineArgs": "package -o \"%USERPROFILE%\\Documents\\Documentation Monster\\WebSurge\\wwwroot\\WebSurge-Documentation-Viewer.exe\" -z \"c:\\Temp\\TMPLOCAL\\West Wind WebSurge-Viewer.zip\"",
+      "workingDirectory": "%USERPROFILE%\\Documents\\Documentation Monster\\WebSurge\\wwwroot"
     },
     "Package ZipFolder": {
       "commandName": "Project",
