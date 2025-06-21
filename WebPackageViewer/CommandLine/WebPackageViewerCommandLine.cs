@@ -49,8 +49,14 @@ namespace WebPackageViewer.CommandLine
             catch { }
 
             SourcePath = ParseStringParameterSwitch("--source", null);
-            OutputPath = ParseStringParameterSwitch("--output", null);            
+            if (SourcePath != null)
+                SourcePath = Environment.ExpandEnvironmentVariables(SourcePath);
+            OutputPath = ParseStringParameterSwitch("--output", null);
+            if (OutputPath != null)
+                OutputPath = Environment.ExpandEnvironmentVariables(OutputPath);
             ExeFile = ParseStringParameterSwitch("--exe", null);
+            if (ExeFile != null)
+                ExeFile = Environment.ExpandEnvironmentVariables(ExeFile);
             if (string.IsNullOrEmpty(ExeFile)) 
                 ExeFile = typeof(App).Assembly.Location;
 
@@ -60,7 +66,15 @@ namespace WebPackageViewer.CommandLine
                 // Zipfolder is not used if a Zip file is provided
                 ZipFolder = ParseStringParameterSwitch("--zipfolder", null);
             }
+
+            if (!string.IsNullOrEmpty(ZipFolder))
+                ZipFolder = Environment.ExpandEnvironmentVariables(ZipFolder);
+            if (!string.IsNullOrEmpty(ZipFilename))
+                ZipFilename = Environment.ExpandEnvironmentVariables(ZipFilename);
+
             PackageFile = ParseStringParameterSwitch("--package", "packageFile");
+            if(!string.IsNullOrEmpty(PackageFile))
+                PackageFile = Environment.ExpandEnvironmentVariables(PackageFile);
             VirtualPath = ParseStringParameterSwitch("--virtual", null);
             InitialUrl = ParseStringParameterSwitch("--initialurl", null);
 
@@ -68,6 +82,8 @@ namespace WebPackageViewer.CommandLine
             var first = FirstParameter?.ToLowerInvariant() ?? string.Empty;
             if (first.StartsWith("-"))
                 first = string.Empty; // ignore any switches - only folder or commands are valid
+            if (!string.IsNullOrEmpty(first))
+                first = Environment.ExpandEnvironmentVariables(first);
 
             if (first == "package")
             {

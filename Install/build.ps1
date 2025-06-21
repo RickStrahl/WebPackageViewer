@@ -23,15 +23,13 @@ else {
 }
 "Truncated Version: " + $version
 
-# dotnet tool install --global ilrepack
+# dotnet tool install --global dotnet-ilrepack
 # Merge Dlls into single EXE - missing WebView2Loader.dll - has to be manually copied
 ilrepack /target:winexe /ver:$version  /targetplatform:$platform  /lib:. /lib:C:\Windows\Microsoft.NET\Framework64\v4.0.30319 /lib:C:\Windows\Microsoft.NET\Framework64\v4.0.30319\WPF /out:..\WebPackageViewer.exe $release\WebPackageViewer.exe $release\Microsoft.Web.WebView2.Core.dll $release\Microsoft.Web.WebView2.Wpf.dll
-
-# TODO: Remove when done debugging
-ilrepack /target:winexe /ver:$version  /targetplatform:$platform  /lib:. /lib:C:\Windows\Microsoft.NET\Framework64\v4.0.30319 /lib:C:\Windows\Microsoft.NET\Framework64\v4.0.30319\WPF /out:"D:\projects\DocumentationMonster\DocumentationMonster\BinSupport\WebPackageViewer.exe" $release\WebPackageViewer.exe $release\Microsoft.Web.WebView2.Core.dll $release\Microsoft.Web.WebView2.Wpf.dll
 
 remove-item ../WebPackageViewer.exe.config
 
 & ".\signtool.exe" sign /v /n "West Wind Technologies"  /tr "http://timestamp.digicert.com" /td SHA256 /fd SHA256 "..\WebPackageViewer.exe"
 
+copy ../WebPackageViewer.exe "\projects\DocumentationMonster\DocumentationMonster\BinSupport"
 exit 0

@@ -180,8 +180,9 @@ namespace WebPackageViewer
                 outputPath = Path.GetDirectoryName(packageFilename);
 
             try
-            {               
-                ZipFile.ExtractToDirectory(packageFilename, outputPath);
+            {
+                var longPath = @"\\?\" + outputPath;
+                ZipFile.ExtractToDirectory(packageFilename, longPath);
             }
             catch (Exception ex)
             {
