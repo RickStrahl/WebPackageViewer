@@ -125,7 +125,6 @@ namespace WebPackageViewer
                 return false;
             }
 
-
             if (Directory.Exists(outputPath))
             {
                 SetError("Output path exists already. Make sure you use a unique folder name or clear the folder to avoid overwriting files.");
@@ -133,7 +132,6 @@ namespace WebPackageViewer
             }
             
             Directory.CreateDirectory(outputPath);
-
 
             var offset = FindMarkerOffset(packageFilename, SeparatorBytes);
             if (offset < 0)
@@ -165,10 +163,8 @@ namespace WebPackageViewer
                 {
                     return false;
                 }
-                try { File.Delete(packageFile); } catch { /* ignore */ }
+                //try { File.Delete(packageFile); } catch { /* ignore */ }
             }
-
-            
 
             return true;
         }
@@ -180,15 +176,59 @@ namespace WebPackageViewer
                 outputPath = Path.GetDirectoryName(packageFilename);
 
             try
-            {
-                var longPath = @"\\?\" + outputPath;
-                ZipFile.ExtractToDirectory(packageFilename, longPath);
+            {                
+                ExtractZipFileToFolder(packageFilename, outputPath);
             }
             catch (Exception ex)
             {
+                if (Directory.Exists(outputPath))
+                {
+                    try { Directory.Delete(outputPath, true); } catch { /* ignore */ }
+                }   
                 SetError(ex, true);
                 return false;
             }
+            return true;
+        }
+
+
+        /// <summary>
+        /// Extracts a zip file to a folder. 
+        /// </summary>
+        /// <param name="zipFile">Zipfile to extract</param>
+        /// <param name="outputFolder">Folder to extract to - supports long path names</param>
+        /// <returns></returns>
+        public bool ExtractZipFileToFolder(string zipFile, string outputFolder = null)
+        {
+            if (string.IsNullOrEmpty(outputFolder))
+            {
+                SetError("Output folder is not specified.");
+                return false;
+            }
+
+            ZipFile.ExtractToDirectory(zipFile, outputFolder);
+
+            zipFile = FileUtils.GetWindowsLongFilename(zipFile);
+            using (var archive =  ZipFile.OpenRead(zipFile))
+            {
+                foreach (var entry in archive.Entries)
+                {
+                    string targetPath = Path.Combine(outputFolder, entry.FullName);
+                    targetPath = targetPath.Replace('/', '\\'); // Ensure Windows path separators
+
+                    targetPath = Path.GetFullPath(targetPath);
+
+                    var fullPath = FileUtils.GetWindowsLongFilename(targetPath);            
+                    if (entry.FullName.EndsWith("/"))
+                        Directory.CreateDirectory(fullPath);
+                    else
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+                        entry.ExtractToFile(fullPath, overwrite: true);
+                    }
+                }
+            }
+
             return true;
         }
 

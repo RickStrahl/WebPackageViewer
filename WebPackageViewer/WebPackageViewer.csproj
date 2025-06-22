@@ -24,7 +24,13 @@
 	
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2957.106" />	
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2957.106" />
+		<!--<PackageReference Include="System.IO.Compression" Version="4.3.0" />-->	
+	</ItemGroup>
+	
+
+	<ItemGroup>
+	  <Reference Include="System.IO.Compression" />
 	</ItemGroup>
 
 	<ItemGroup>
