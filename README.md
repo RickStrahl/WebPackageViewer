@@ -75,3 +75,17 @@ that allows you to customize how the Packaged site runs:
 ```
 
 
+## Current Status
+This project currently is experimental and specifically geared towards the integration in [Documentation Monster](https://documentationmonster.com). It works great for that, but there are some customizations that make it specifically work in this project.
+
+It's possible to customize and integrate with your own solutions. Currently I wouldn't consider this a generic solution that bundles any kind of Web content as WebView only Web browsing has a few limitations. I'm considering adding support for HttpSys based local Web server integration, but that unfortunately requires admin rights to initially to register a local http port.
+
+### A few things that don't work well
+
+* **Default Document Navigation**
+Because there's no Web server that sits behind this there's no Web site configuration. You can specify an 'initial' Url that is appended to blank Urls and serves the purpose of a default document. Only one document (ie. `/index.html`) can be specified.
+
+* **#anchor  Navigation**  
+Due to some quirks in the WebView resource navigation, `#anchor` paths are not passed to the the initial Web Resource navigation that currently serves page content. So there's no way to know that that's happening, so # links still result in a local navigation as we can't differentiate anchored and non-anchored request.
+
+
