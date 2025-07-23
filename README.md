@@ -1,8 +1,17 @@
 # West Wind Web Package Viewer
 
+## Still under Construction
+
 #### A static Web Site packager for Windows that lets you run a Web site offline as a self-contained Exe
 
-This tool can quickly automate creating a small self-contained Windows Exe that can 'run' a folder as a Web site locally without an Internet connection or Web server.
+This tool can quickly automate creating a small self-contained Windows Exe that can 'run' a folder as a Web site locally without an Internet connection or Web server. 
+
+The idea is that you can package a static site and run it locally just by launching the EXE which internally loads all links.
+
+Here's what this looks like in one of my applications ([Documentation Monster](https://documentationmonster.com)) which can output documentation in this viewer mode:
+
+![Web Packager in Action with a documentation project](https://documentationmonster.com/docs/Output-Generation/OfflineDocumentationViewer.png)
+
 
 ## Why this?
 It's meant to address the scenario of packaging and running local static Web sites that would normally require an Http Server to run - ie. that won't just run as files from disk, due to Http requirements for loading dynamic data. This is a common scenario for client side applications that load data or UI content at runtime as most modern Javascript frameworks do these days. 
