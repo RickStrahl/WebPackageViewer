@@ -16,7 +16,7 @@ Here's what this looks like in one of my applications ([Documentation Monster](h
 ## Why this?
 It's meant to address the scenario of packaging and running local static Web sites that would normally require an Http Server to run - ie. that won't just run as files from disk, due to Http requirements for loading dynamic data. This is a common scenario for client side applications that load data or UI content at runtime as most modern Javascript frameworks do these days. 
 
-It also addresses scenario for documentation Web sites that users often request to be able to run offline. It provides an easy way to provide rich documentation functionality without having to run online. 
+It also addresses scenario for documentation or FAQ Web sites that users often request to be able to run offline. It provides an easy way to provide rich documentation functionality without having to run online. 
 
 
 ## Operational Modes
