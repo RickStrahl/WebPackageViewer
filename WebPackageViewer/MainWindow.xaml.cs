@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -63,12 +64,12 @@ namespace WebPackageViewer
                     if (string.IsNullOrEmpty(virt))
                     {
                         e.Cancel = false ;
-                        //webView.CoreWebView2.Navigate(uri);                        
+                        // just let the control navigate                        
                     }
                     else if (uri.Contains($"/{virt}/"))
-                    {
+                    {                        
                         var newUri = uri.Replace($"/{virt}/", "/");
-                        e.Cancel = true;
+                        e.Cancel = true;                        
                         webView.CoreWebView2.Navigate(newUri);
                     }
                     else if (uri.EndsWith($"/{virt}"))
@@ -81,18 +82,19 @@ namespace WebPackageViewer
 
                 // Handled embedded reosource links
                 // look at all resource requests and serve local files
-                webView.CoreWebView2.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);                                
+                webView.CoreWebView2.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All); 
                 webView.CoreWebView2.WebResourceRequested += (s, args) =>
                 {
-
-                    var uri = new Uri(args.Request.Uri);
+                    var uri = new Uri(args.Request.Uri);                    
                     var suri = uri.ToString();
-                    if (!suri.StartsWith("https://webviewer.host"))
-                        return;
+
+                    string initialPage = string.Empty;
+                    if (uri.AbsolutePath == "/")
+                        initialPage = Configuration.InitialUrl;
 
                     var virt = Configuration.VirtualPath.Trim('/');
 
-                    var localPath = uri.AbsolutePath.Replace($"/{virt}/", "/").Replace("//", "/");                
+                    var localPath = (uri.AbsolutePath.Replace($"/{virt}/", "/") + initialPage.TrimStart('/')).Replace("//", "/");                
                     var filePath = Path.Combine(Configuration.WebRootPath, localPath.TrimStart('/'));
 
                     if (File.Exists(filePath))
