@@ -22,7 +22,7 @@
     },
     "Help Mode": {
       "commandName": "Project",
-      "commandLineArgs": "--windowtitle \"Bogus Bopper\" --virtual \"/docs/\" ",
+      "commandLineArgs": "package --output \"C:\\Users\\rstrahl\\Documents\\Documentation Monster\\Documentation Monster\\wwwroot\\Documentation-Viewer.exe\" --zipFolder \".\"  ",
       "workingDirectory": "C:\\Users\\rstrahl\\Documents\\Documentation Monster\\Documentation Monster\\wwwroot"
     },
     "Packaged Debug": {

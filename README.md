@@ -152,7 +152,15 @@ To package a Web Site folder and create a `packaged.exe` file you can use the fo
 
 Output is the package EXE file to create - specify a path here. 
 
-ZipFolder specifies folder to zip up and attach. This file zips up the folder and all its subfolders which is then unpacked when running the Exe. Alternately you can use `--zipfile` and specify a custom Zip file that you've created. This is great if you use an application to automate this process when you need to add a few additional files to the zip file for example.
+ZipFolder specifies folder to zip up and attach. This file zips up the folder and all its subfolders which is then unpacked when running the Exe.
+
+Alternately you can use `--zipfile` and specify a custom Zip file that you've created. This is great if you use an application to automate this process when you need to add a few additional files to the zip file for example.
+
+## Unpackaging
+Unpackaging is internally used by the generated EXE but you can also use it explicitly to unzip a folder and separate out the Exe and data file.
+
+
+
 
 ## Example: Integrating Package Generation in an Application
 For a more sophisticated scenario, if you want to generate a package in code as part of an application, here's an example how I create the executable for Documentation Monster.

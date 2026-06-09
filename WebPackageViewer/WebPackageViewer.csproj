@@ -3,7 +3,7 @@
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net472</TargetFramework>	
 		<UseWPF>true</UseWPF>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
 		<PublishSingleFile>true</PublishSingleFile>
 		<SelfContained>false</SelfContained>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
@@ -38,6 +38,10 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 				
+	</ItemGroup>
+
+	<ItemGroup>
+		<Resource Include="webview2loader.dll" />
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">

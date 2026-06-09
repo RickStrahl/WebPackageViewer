@@ -25,7 +25,7 @@ else {
 
 # dotnet tool install --global dotnet-ilrepack
 # Merge Dlls into single EXE - missing WebView2Loader.dll - has to be manually copied
-ilrepack /target:winexe /ver:$version  /targetplatform:$platform  /lib:. /lib:C:\Windows\Microsoft.NET\Framework64\v4.0.30319 /lib:C:\Windows\Microsoft.NET\Framework64\v4.0.30319\WPF /out:..\WebPackageViewer.exe $release\WebPackageViewer.exe $release\Microsoft.Web.WebView2.Core.dll $release\Microsoft.Web.WebView2.Wpf.dll
+ilrepack /target:winexe /ver:$version  /targetplatform:$platform  /lib:. /lib:C:\Windows\Microsoft.NET\Framework64\v4.0.30319 /lib:C:\Windows\Microsoft.NET\Framework64\v4.0.30319\WPF /out:..\WebPackageViewer.exe $release\WebPackageViewer.exe $release\Microsoft.Web.WebView2.Core.dll $release\Microsoft.Web.WebView2.Wpf.dll 
 
 remove-item ../WebPackageViewer.exe.config
 
