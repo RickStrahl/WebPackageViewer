@@ -188,6 +188,7 @@ namespace WebPackageViewer.CommandLine
                 ColorConsole.WriteLine("\nOptions:", ConsoleColor.Green);
                 ColorConsole.WriteLine(
                     """
+                    --source      - Source folder to create package from - if omitted current folder is used
                     --output      - package: Output filename for the packaged exe
                                     unpackage: Output folder where the Web site and Exe is unpackaged to
                     --exe         - Optional Exe file to package. If not specified source exe is used

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -140,15 +140,23 @@ namespace WebPackageViewer
                 return false;
             }
 
+            ;
+            
             var exeFile = Path.Combine(outputPath, "WebPackageViewer.exe");
-            using (var exeFs = new FileStream(exeFile, FileMode.Create, FileAccess.Write, FileShare.Write))
+            if (File.Exists(exeFile))
+            {
+                File.Delete(exeFile);                
+            }   
+            using (var exeFs = new FileStream(exeFile, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
             using (var fs = new FileStream(packageFilename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 CopyToBytes(fs, exeFs, offset - SeparatorBytes.Length);
                 fs.Flush();
             }
+            
 
             var packageFile = Path.Combine(outputPath, "Packaged.zip");
+            
             using (var packageFs = new FileStream(packageFile, FileMode.Create, FileAccess.Write, FileShare.Write))
             using (var fs = new FileStream(packageFilename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
@@ -156,9 +164,9 @@ namespace WebPackageViewer
                 fs.CopyTo(packageFs);
                 packageFs.Flush();
             }
-
+            
             if (unZip)
-            {
+            {                
                 if (!UnZipPackageInplace(packageFile, outputPath)) 
                 {
                     return false;
@@ -174,9 +182,9 @@ namespace WebPackageViewer
         {
             if(string.IsNullOrEmpty(outputPath))
                 outputPath = Path.GetDirectoryName(packageFilename);
-
+            
             try
-            {                
+            {
                 ExtractZipFileToFolder(packageFilename, outputPath);
             }
             catch (Exception ex)
@@ -205,9 +213,7 @@ namespace WebPackageViewer
                 SetError("Output folder is not specified.");
                 return false;
             }
-
-            ZipFile.ExtractToDirectory(zipFile, outputFolder);
-
+                        
             zipFile = FileUtils.GetWindowsLongFilename(zipFile);
             using (var archive =  ZipFile.OpenRead(zipFile))
             {
@@ -223,7 +229,7 @@ namespace WebPackageViewer
                         Directory.CreateDirectory(fullPath);
                     else
                     {
-                        Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+                        Directory.CreateDirectory(Path.GetDirectoryName(fullPath));              
                         entry.ExtractToFile(fullPath, overwrite: true);
                     }
                 }
