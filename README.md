@@ -1,6 +1,5 @@
 # West Wind Web Package Viewer
 
-
 **A static Web Site packager for Windows that lets you run a Web site offline as a self-contained Exe**
 
 ### Still under Construction
@@ -15,13 +14,16 @@ Here's what this looks like in one of my applications - [Documentation Monster](
 
 
 ## Why this?
-It's meant to address the scenario of packaging and running local static Web sites that would normally require an Http Server to run - ie. that won't just run as files from disk, due to Http requirements for loading dynamic data. This is a common scenario for client side applications that load data or UI content at runtime as most modern Javascript frameworks do these days. 
+It's meant to address the scenario of packaging and running local static Web sites that would normally require an Http Server to run - ie. that won't just run as files from disk, due to Http requirements for loading dynamic data. This is a common scenario for client side Javascript applications that load data or UI content at runtime, as most modern Javascript / SPA frameworks do these days. 
 
-It also addresses scenario for documentation or FAQ Web sites that users often request to be able to run offline. It provides an easy way to provide rich documentation functionality without having to run online. 
+It also addresses scenario for documentation or FAQ Web sites that users often request to be able to run offline. It provides an easy way to provide rich documentation functionality without requiring an Internet connection.
 
+> There are other ways to do this like running a local Web Server like [LiveReloadServer](https://github.com/RickStrahl/LiveReloadServer) which you can point at a folder and run that folder as a Web site. For technical users this is often preferrable as you get to use a standard Web Browser with all its features.
+>
+> This packager is different in that is doesn't require anything pre-installed. Everything is included in a single packaged file that you can simply click on and run.
 
-## Operational Modes
-The tool has 3 different modes:
+## Operational Tool Modes
+WebPackager is a command line tool has 3 different modes:
 
 * **Run**  
 Run Mode unpacks a previously packaged application, by unpacking the attached Web site and then 'running' the Web site out of the unpacked temporary folder in a standard Desktop Window. No Web server is required.
@@ -32,17 +34,30 @@ Package Mode is used to create a customized version of the package Exe that incl
 * **Unpackage**  
 Unpackage allows you to **manually** unpackage the Exe and the embedded data, either as a zip file, or as a folder.
 
-A single small executable that can be driven with Command Line parameters is used to handle all three of these modes 
+A single small executable that can be driven with Command Line parameters is used to handle all three of these modes.
 
-Unpackage is likely an uncommon scenario - you're typically going to 'run' the package
+
+The packager is also embedded in any generated package (nice and recursive, eh?) which is essentially the exe with the zip file appended to it and it's used then to unpackage html into a temporary location and then 'run' that site.
+
+> ##### Simply Run a Web Site
+> Note you can also use `WebPackager` to just run any static Html site without packaging. Simply run `WebPackageViewer` in a folder with the static Html Web site you want to run, or specify the `foldername` parameter.
 
 ## Command Line Options
 The following command line options are available:
 
 ```
-----------------------------
-West Wind Web Package Viewer
-----------------------------
+-----------------------------------
+West Wind Web Package Viewer v1.0.2
+-----------------------------------
+A Web Site Viewer that can:
+
+* Run a static Web site from a folder
+  and display it in an internal WebView
+* Can package a Web site into a *single file Exe*
+  and run it to unpack and display the site
+* Can unpackage a packaged Web site into its
+  Exe and Web site files
+  
 Usage: WebPackageViewer [foldername | command] [options]
 
 Foldername:
@@ -50,28 +65,30 @@ Runs a web site in that location or if no folder in the current folder.
 If packaged, unpacks into a tempfolder and runs the site from there.
 
 Commands:
-  package   - Create a package from an executable and a zip file
-  unpackage - Unpackage the Exe and Website into the output folder
-  help      - Show this help message
+package       - Create a package from an executable and a zip file
+unpackage     - Unpackage the Exe and Website into the output folder
+help          - Show this help message
 
 Options:
-  --output     - package: Output filename for the packaged exe
-                 unpackage: Output folder where the Web site and Exe is unpackaged to
-  --exe        - Optional Exe file to package. If not specified source exe is used
-  --zipfile    - The Zip File to package
-  --zipfolder  - A folder to zip up and then package
-  --virtual    - Virtual Path when running the site (/*, /docs)
-  --initialurl - Initial URL to load in the WebView (/index.html*, /docs/index.html)
+--output      - package: Output filename for the packaged exe
+                unpackage: Output folder where the Web site and Exe is unpackaged to
+--exe         - Optional Exe file to package. If not specified source exe is used
+--zipfile     - An existing Zip File to package (priortized over --zipfolder)
+--zipfolder   - A folder to zip up and then package
+--virtual     - Virtual Path when running the site (/,/docs)
+--initialurl  - Initial URL to load in the WebView (/index.html, /docs/index.html)
+--windowtitle - Window title displayed on the Window
+
 
 Configuration File
 You can optionally provide a configuration in your Webroot Folder
 that allows you to customize how the Packaged site runs:
-
 // WebPackageViewer.config.json
 {
     "VirtualPath": "/docs",
     "InitialUrl": "/docs/index.html",
-    "Window Title": "West Wind Web Package Viewer"
+    "Window Title": "West Wind Web Package Viewer",
+    "WindowSize": "1280x800"
 }
 ```
 

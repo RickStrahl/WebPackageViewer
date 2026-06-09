@@ -3,7 +3,7 @@
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net472</TargetFramework>	
 		<UseWPF>true</UseWPF>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<PublishSingleFile>true</PublishSingleFile>
 		<SelfContained>false</SelfContained>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
@@ -20,6 +20,7 @@
 		<PackageIcon>icon.png</PackageIcon>
 		<PlatformTarget>AnyCPU</PlatformTarget>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 	
 

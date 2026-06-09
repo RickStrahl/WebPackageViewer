@@ -28,7 +28,7 @@ namespace WebPackageViewer
             ExeFile = System.Reflection.Assembly.GetExecutingAssembly().Location;
             OutputFolder = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(ExeFile) + "_WebViewer");
 
-            Title = Configuration.WindowTitle;
+            Title = App.CommandLine.WindowTitle ?? Configuration.WindowTitle ?? "West Wind Web Package Viewer";
 
             if (!string.IsNullOrEmpty(config.WindowSize) && config.WindowSize.Contains("x"))
             {

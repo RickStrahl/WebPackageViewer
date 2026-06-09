@@ -29,7 +29,7 @@ ilrepack /target:winexe /ver:$version  /targetplatform:$platform  /lib:. /lib:C:
 
 remove-item ../WebPackageViewer.exe.config
 
-& ".\signtool.exe" sign /v /n "West Wind Technologies"  /tr "http://timestamp.digicert.com" /td SHA256 /fd SHA256 "..\WebPackageViewer.exe"
+& ".\signfile" -file "..\WebPackageViewer.exe"
 
 copy ../WebPackageViewer.exe "\projects\DocumentationMonster\DocumentationMonster\BinSupport"
 exit 0

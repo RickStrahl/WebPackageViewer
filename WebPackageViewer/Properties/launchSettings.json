@@ -22,8 +22,8 @@
     },
     "Help Mode": {
       "commandName": "Project",
-      "commandLineArgs": "help",
-      "workingDirectory": "C:\\Users\\rstrahl\\Documents\\Documentation Monster\\WebSurge\\wwwroot"
+      "commandLineArgs": "--windowtitle \"Bogus Bopper\" --virtual \"/docs/\" ",
+      "workingDirectory": "C:\\Users\\rstrahl\\Documents\\Documentation Monster\\Documentation Monster\\wwwroot"
     },
     "Packaged Debug": {
       "executablePath": "C:\\Users\\rstrahl\\Documents\\Documentation Monster\\WebSurge\\wwwroot\\WestWindWebsurge-Documentation-Viewer.exe"
