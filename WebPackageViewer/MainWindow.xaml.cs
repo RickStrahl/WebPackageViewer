@@ -88,13 +88,13 @@ namespace WebPackageViewer
                     var uri = new Uri(args.Request.Uri);                    
                     var suri = uri.ToString();
 
-                    string initialPage = string.Empty;
-                    if (uri.AbsolutePath == "/")
-                        initialPage = Configuration.InitialUrl;
+                    var absolutePath = uri.AbsolutePath;                    
+                    if (absolutePath == "/")
+                        absolutePath = Configuration.InitialUrl;
 
                     var virt = Configuration.VirtualPath.Trim('/');
 
-                    var localPath = (uri.AbsolutePath.Replace($"/{virt}/", "/") + initialPage.TrimStart('/')).Replace("//", "/");                
+                    var localPath = absolutePath.Replace($"/{virt}/", "/").Replace("//", "/");                
                     var filePath = Path.Combine(Configuration.WebRootPath, localPath.TrimStart('/'));
 
                     if (File.Exists(filePath))
