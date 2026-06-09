@@ -107,7 +107,7 @@ Because there's no Web server that sits behind this there's no Web site configur
 Due to some quirks in the WebView resource navigation, `#anchor` paths are not passed to the the initial Web Resource navigation that currently serves page content. So there's no way to know that that's happening, so # links still result in a local navigation as we can't differentiate anchored and non-anchored request.
 
 
-## Windows Security
+## Windows SmartScreen Security
 The idea of this tool is to allow packaged Html to 'run' and display even if it contains dynamically loaded content (as most SPA apps do). The implementation of this tool allows for that to work just fine.
 
 Unfortunately Windows can get in the way of smooth operation, due to security concerns running an executable application that is downloaded off the Internet causing downloaded files and files contained in downloaded archives to have MOTW (Mark of the Web).
@@ -123,3 +123,7 @@ SmartScreen is a reputation based security feature that warns about unknown exec
 
 ![bypassingsmartscreen](https://markdownmonster.west-wind.com/blog/imagecontent/2026/windows-protected-your-pc-dealing-with-windows-smartscreen-on-installation/bypassingsmartscreen.png)
 
+### Signing the Exe can Help
+If you are a developer and you want to distribute your help file it can help significantly if you can sign your packaged executable. If you have an Authenticode certificate by all means sign the generated help file as it will help with SmartScreen and at least get you to the reputation based metrics that eventually might pass the exe through.
+
+Unsigned Exes for downloaded files almost always trigger SmartScreen unfortunately, so this is something that you need to consider.
