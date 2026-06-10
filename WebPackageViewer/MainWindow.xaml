@@ -5,6 +5,8 @@
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         Title="West Wind Web Package Viewer"
         WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="CanResize"
         Height="800" Width="1270">
 
     <Window.Resources>
@@ -47,13 +49,14 @@
     <shell:WindowChrome.WindowChrome>
         <shell:WindowChrome
             UseAeroCaptionButtons="False"
-            CaptionHeight="36"
-            ResizeBorderThickness="8"
+            CaptionHeight="32"
+            ResizeBorderThickness="4"
             GlassFrameThickness="0"
-            CornerRadius="6"/>
+            CornerRadius="12"/>
     </shell:WindowChrome.WindowChrome>
 
-    <Border BorderBrush="{DynamicResource WindowBorderBrush}"
+    <Border x:Name="RootBorder"
+            BorderBrush="{DynamicResource WindowBorderBrush}"
             BorderThickness="0"
             Background="{DynamicResource WindowBackgroundBrush}">
 
@@ -123,7 +126,7 @@
                         Click="CloseButton_Click"/>
             </Grid>
 
-            <Grid Grid.Row="1"
+            <Grid Grid.Row="1" Margin= "3 0 3 3"
                   Background="{DynamicResource WindowBackgroundBrush}">
                 <Grid Name="MainGrid">
                     <wv2:WebView2 x:Name="webView"/>

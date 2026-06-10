@@ -214,12 +214,12 @@ namespace WebPackageViewer
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ApplyThemeFromSystem();
-            UpdateMaximizeRestoreGlyph();
+            UpdateWindowLayout();
         }
 
         private void Window_StateChanged(object sender, EventArgs e)
         {
-            UpdateMaximizeRestoreGlyph();
+            UpdateWindowLayout();
         }
 
         private void Window_Activated(object sender, EventArgs e)
@@ -273,6 +273,28 @@ namespace WebPackageViewer
                 return;
 
             MaximizeRestoreButton.Content = WindowState == WindowState.Maximized ? "\uE923" : "\uE922";
+        }
+
+        private void UpdateWindowLayout()
+        {
+            UpdateMaximizeRestoreGlyph();
+
+            if (WindowState == WindowState.Maximized)
+            {
+                // Compensate for Windows pushing the frame off-screen to hide resize grips.
+                RootBorder.Margin = SystemParameters.WindowResizeBorderThickness;
+                // WebView2 fills the full content area when maximized.
+                webView.Margin = new Thickness(0);
+            }
+            else
+            {
+                RootBorder.Margin = new Thickness(0);
+                // WebView2's child HWND covers the window edges and swallows WM_NCHITTEST,
+                // preventing WindowChrome from seeing resize gestures on bottom/left/right/corners.
+                // Leaving a strip matching ResizeBorderThickness (2px) around those edges exposes
+                // pure WPF surface so the parent window receives the resize hit-tests.
+                webView.Margin = new Thickness(2, 0, 2, 2);
+            }
         }
 
         private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
