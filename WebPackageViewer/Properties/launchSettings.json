@@ -3,7 +3,7 @@
     "Viewer Mode": {
       "commandName": "Project",
       "workingDirectory": "%USERPROFILE%\\Documents\\Documentation Monster\\WebSurge\\wwwroot",
-      "commandLineArgs": "-v /docs -u /docs/index.html"
+      "commandLineArgs": "--virtual /docs -u /docs/index.html"
 
     },
     "Package Mode": {

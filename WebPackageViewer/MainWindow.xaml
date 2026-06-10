@@ -2,10 +2,136 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
-        Title="West Wind Web Package Viewer" 
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        Title="West Wind Web Package Viewer"
         WindowStartupLocation="CenterScreen"
         Height="800" Width="1270">
-    <Grid Name="MainGrid">
-        <wv2:WebView2 x:Name="webView"/>
-    </Grid>
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#2D2D30"/>
+        <SolidColorBrush x:Key="WindowBorderBrush" Color="Transparent"/>
+        <SolidColorBrush x:Key="ActiveTitleBarBackgroundBrush" Color="#1E1E1E"/>
+        <SolidColorBrush x:Key="TitleBarInactiveBackgroundBrush" Color="#252526"/>
+        <SolidColorBrush x:Key="TitleBarForegroundBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="TitleBarButtonBackgroundBrush" Color="Transparent"/>
+        <SolidColorBrush x:Key="TitleBarButtonHoverBrush" Color="#22FFFFFF"/>
+        <SolidColorBrush x:Key="TitleBarButtonPressedBrush" Color="#33FFFFFF"/>
+        <SolidColorBrush x:Key="TitleBarButtonForegroundBrush" Color="#EEEEEE"/>
+
+        <Style x:Key="TitleBarButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource TitleBarButtonBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TitleBarButtonForegroundBrush}"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBackground" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBackground" Property="Background" Value="{DynamicResource TitleBarButtonHoverBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBackground" Property="Background" Value="{DynamicResource TitleBarButtonPressedBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome
+            UseAeroCaptionButtons="False"
+            CaptionHeight="36"
+            ResizeBorderThickness="8"
+            GlassFrameThickness="0"
+            CornerRadius="6"/>
+    </shell:WindowChrome.WindowChrome>
+
+    <Border BorderBrush="{DynamicResource WindowBorderBrush}"
+            BorderThickness="0"
+            Background="{DynamicResource WindowBackgroundBrush}">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="36"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid x:Name="TitleBar"
+                  Grid.Row="0"
+                  Background="{DynamicResource ActiveTitleBarBackgroundBrush}"
+                  shell:WindowChrome.IsHitTestVisibleInChrome="False">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="46"/>
+                    <ColumnDefinition Width="46"/>
+                    <ColumnDefinition Width="46"/>
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="SystemMenuButton"
+                        Grid.Column="0"
+                        Width="32"
+                        Height="32"
+                        Margin="2,2,0,2"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Style="{DynamicResource TitleBarButtonStyle}"
+                        shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                    <Image Source="/WebPackageViewer.ico" Width="30" Height="30"/>
+                </Button>
+
+                <Border Grid.Column="0"
+                        Margin="36,0,0,0"
+                        Background="Transparent"
+                        shell:WindowChrome.IsHitTestVisibleInChrome="False">
+                    <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=Title}"
+                               Foreground="{DynamicResource TitleBarForegroundBrush}"
+                               VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis"/>
+                </Border>
+
+                <Button Grid.Column="1"
+                        Style="{DynamicResource TitleBarButtonStyle}"
+                        FontFamily="Segoe Fluent Icons"
+                        FontSize="12"
+                        shell:WindowChrome.IsHitTestVisibleInChrome="True"
+                        Content="&#xE921;"
+                        Click="MinimizeButton_Click"/>
+
+                <Button x:Name="MaximizeRestoreButton"
+                        Grid.Column="2"
+                        Style="{DynamicResource TitleBarButtonStyle}"
+                        FontFamily="Segoe Fluent Icons"
+                        FontSize="12"
+                        shell:WindowChrome.IsHitTestVisibleInChrome="True"
+                        Content="&#xE922;"
+                        Click="MaximizeButton_Click"/>
+
+                <Button Grid.Column="3"
+                        Style="{DynamicResource TitleBarButtonStyle}"
+                        FontFamily="Segoe Fluent Icons"
+                        FontSize="12"
+                        shell:WindowChrome.IsHitTestVisibleInChrome="True"
+                        Content="&#xE8BB;"
+                        Click="CloseButton_Click"/>
+            </Grid>
+
+            <Grid Grid.Row="1"
+                  Background="{DynamicResource WindowBackgroundBrush}">
+                <Grid Name="MainGrid">
+                    <wv2:WebView2 x:Name="webView"/>
+                </Grid>
+            </Grid>
+
+        </Grid>
+
+    </Border>
+
 </Window>
