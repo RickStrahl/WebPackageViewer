@@ -3,10 +3,7 @@
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net472</TargetFramework>	
 		<UseWPF>true</UseWPF>
-		<Version>1.1</Version>
-		<AssemblyVersion>1.1</AssemblyVersion>
-		<FileVersion>1.1</FileVersion>
-		<InformationalVersion>1.1</InformationalVersion>
+		<Version>1.1</Version>	
 		<PublishSingleFile>true</PublishSingleFile>
 		<SelfContained>false</SelfContained>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
@@ -21,7 +18,8 @@
 		<Description>Web Package Viewer is local Web Site self-contained, packaging tool that allows you to run and view a static Web site including all dependencies without requiring a web server. Can load local data, and make client side local Http requests.</Description>
 		
 		<PlatformTarget>AnyCPU</PlatformTarget>
-		<LangVersion>latest</LangVersion>
+
+		    <ApplicationManifest>app.manifest</ApplicationManifest>				<LangVersion>latest</LangVersion>
 		<ApplicationIcon>WebPackageViewer.ico</ApplicationIcon>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 	</PropertyGroup>
