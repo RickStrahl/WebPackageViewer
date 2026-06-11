@@ -268,9 +268,12 @@ Write-Host "Copied Win32 resources from source EXE to merged EXE."
 
 remove-item ../WebPackageViewer.exe.config
 
-return;
+# copy unsigned copy
+copy ../WebPackageViewer.exe ../WebPackageViewer-Unsigned.exe
+copy ../WebPackageViewer.exe "\projects\DocumentationMonster\DocumentationMonster\BinSupport\WebPackageViewer.exe"
 
 & ".\signfile" -file "..\WebPackageViewer.exe"
 
-copy ../WebPackageViewer.exe "\projects\DocumentationMonster\DocumentationMonster\BinSupport"
+#copy ../WebPackageViewer.exe "\projects\DocumentationMonster\DocumentationMonster\BinSupport"
+
 exit 0
