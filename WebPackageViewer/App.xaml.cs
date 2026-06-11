@@ -25,8 +25,6 @@ namespace WebPackageViewer
 
         protected void LogString(string message)
         {
-          
-
             if (!message.EndsWith("\r\n"))
                 message += "\r\n";
 
@@ -38,14 +36,12 @@ namespace WebPackageViewer
 
         protected override void OnStartup(StartupEventArgs e)
         {
-
-
             if (!File.Exists("WebView2Loader.dll"))
             {
                 // If the loader is not present, we may be running from a single file bundle and need to unpack first
                 try
                 {
-                    var loaderBytes = NativeResourceHelper.ReadResource("WEBVIEW2LOADER"); // just to check if the resource is there and can be read                               
+                    var loaderBytes = ResourceHelper.LoadWebView2LoaderBytes();             
                     File.WriteAllBytes("WebView2Loader.dll", loaderBytes);
                 }
                 catch
@@ -57,9 +53,9 @@ An error occurred unpacking the WebView2Loader.dll resource.
 Make sure the application is not running from a read-only location and that you have permissions to write to the current directory.
 
 Alternately manually copy `WebView2Loader.dll` from the same folder as the WebPackageViewer.exe to the current directory and restart the application.`
-""",
-                                    "Web Viewer Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                    Environment.Exit(1);
+""", 
+                                        "Web Viewer Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                        Environment.Exit(1);
                 }
             }
 
@@ -81,10 +77,8 @@ Alternately manually copy `WebView2Loader.dll` from the same folder as the WebPa
             var pack = new FilePackager();
             var exeFile = Assembly.GetExecutingAssembly().Location;
 
-            // if in temp path and file is over 2mb then extract and run from there
-            if (!exeFile.ToLower().Contains(Path.GetTempPath().ToLower()) && 
-                new FileInfo(exeFile).Length > 2_000_000)
-            { 
+            if (pack.FindMarkerOffset(exeFile, pack.SeparatorBytes) > 0)
+            {
                 var outputPath = Path.Combine(Path.GetTempPath(), "dm_" + StringUtils.GenerateUniqueId(8));                
                 TempUnpackDirectory = outputPath;
                 
@@ -180,38 +174,38 @@ Alternately manually copy `WebView2Loader.dll` from the same folder as the WebPa
     }
 
 
-    //public static class ResourceHelper
-    //{
-    //    /// <summary>
-    //    /// Retrieve WebView2Loader.dll which we can't embed into the exe
-    //    /// directly with ILMerge.
-    //    /// </summary>
-    //    /// <returns></returns>
-    //    /// <exception cref="FileNotFoundException"></exception>
-    //    public static byte[] LoadWebView2LoaderBytes()
-    //    {
-    //        var asm = typeof(ResourceHelper).Assembly;
+    public static class ResourceHelper
+    {
+        /// <summary>
+        /// Retrieve WebView2Loader.dll which we can't embed into the exe
+        /// directly with ILMerge.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="FileNotFoundException"></exception>
+        public static byte[] LoadWebView2LoaderBytes()
+        {
+            var asm = typeof(ResourceHelper).Assembly;
 
-    //        using var resStream =
-    //            asm.GetManifestResourceStream("WebPackageViewer.g.resources");
+            using var resStream =
+                asm.GetManifestResourceStream("WebPackageViewer.g.resources");
 
-    //        if (resStream == null)
-    //            throw new FileNotFoundException("WebPackageViewer.g.resources not found.");
+            if (resStream == null)
+                throw new FileNotFoundException("WebPackageViewer.g.resources not found.");
 
-    //        using var reader = new ResourceReader(resStream);
+            using var reader = new ResourceReader(resStream);
 
-    //        foreach (DictionaryEntry entry in reader)
-    //        {
-    //            if ((string)entry.Key == "webview2loader.dll")
-    //            {
-    //                using var stream = (Stream)entry.Value;
-    //                using var ms = new MemoryStream();
-    //                stream.CopyTo(ms);
-    //                return ms.ToArray();
-    //            }
-    //        }
+            foreach (DictionaryEntry entry in reader)
+            {
+                if ((string)entry.Key == "webview2loader.dll")
+                {
+                    using var stream = (Stream)entry.Value;
+                    using var ms = new MemoryStream();
+                    stream.CopyTo(ms);
+                    return ms.ToArray();
+                }
+            }
 
-    //        throw new FileNotFoundException("WebPackageViewer.g.resources not found.");
-    //    }
-    //}
+            throw new FileNotFoundException("WebPackageViewer.g.resources not found.");
+        }
+    }
 }

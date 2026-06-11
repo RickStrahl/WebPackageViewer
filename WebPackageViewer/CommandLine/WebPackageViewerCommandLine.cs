@@ -61,8 +61,6 @@ namespace WebPackageViewer.CommandLine
         /// </summary>
         public string SignCommand { get; set; }
 
-        public bool RemoveResources { get; set; }
-
 
         public override void Parse()
         {
@@ -103,7 +101,7 @@ namespace WebPackageViewer.CommandLine
             InitialUrl = ParseStringParameterSwitch("--initialurl", null);
             WindowTitle = ParseStringParameterSwitch("--windowtitle", null);
             SignCommand = ParseStringParameterSwitch("--signcommand", null);
-            RemoveResources = ParseParameterSwitch("-removeresources");
+
 
 
             var first = FirstParameter?.ToLowerInvariant() ?? string.Empty;

@@ -22,15 +22,13 @@
 		
 		<PlatformTarget>AnyCPU</PlatformTarget>
 		<LangVersion>latest</LangVersion>
-		
-		<!-- Native Resource Embedding Compilation -->
-		<NativeResFile>$(MSBuildProjectDirectory)\obj\$(Configuration)\$(TargetFramework)\$(RuntimeIdentifier)\NativeResources.res</NativeResFile>
-		<RcExe Condition="'$(RcExe)'=='' and Exists('$(MSBuildProgramFiles32)\Windows Kits\10\bin\10.0.26100.0\x64\rc.exe')">$(MSBuildProgramFiles32)\Windows Kits\10\bin\10.0.26100.0\x64\rc.exe</RcExe>
-		<Win32Resource>$(NativeResFile)</Win32Resource>
+		<ApplicationIcon>WebPackageViewer.ico</ApplicationIcon>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
 	</PropertyGroup>
 	
 	<ItemGroup>
 	  <Resource Include="WebPackageViewer.ico" />
+	  <Resource Include="webview2loader.dll" />
 	</ItemGroup>
 	
 
@@ -50,15 +48,7 @@
 	</ItemGroup>
 
 
-	<Target Name="BuildNativeResources"
-	        BeforeTargets="CoreCompile"
-	        Inputs="$(MSBuildProjectDirectory)\Properties\Resources.rc;$(MSBuildProjectDirectory)\website_data.zip;$(MSBuildProjectDirectory)\webview2loader.dll;$(MSBuildProjectDirectory)\WebPackageViewer.ico;$(MSBuildProjectDirectory)\app.manifest"
-	        Outputs="$(NativeResFile)">
-	  <Error Condition="'$(RcExe)'==''" Text="Windows resource compiler (rc.exe) not found. Install Windows 10 SDK or set RcExe MSBuild property." />
-	  <MakeDir Directories="$([System.IO.Path]::GetDirectoryName('$(NativeResFile)'))" />
-	  <Exec Command="&quot;$(RcExe)&quot; /nologo /fo &quot;$(NativeResFile)&quot; &quot;$(MSBuildProjectDirectory)\Properties\Resources.rc&quot;"
-	        WorkingDirectory="$(MSBuildProjectDirectory)" />
-	</Target>
+
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 	  <Exec Command="pwsh -ExecutionPolicy Bypass -File ..\install\build.ps1" />

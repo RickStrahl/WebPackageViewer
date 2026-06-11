@@ -11,9 +11,9 @@ namespace WebPackageViewer.Tests
         {
             var pack = new FilePackager();
 
-            var exeFile = @"C:\Users\rstrahl\Documents\Documentation Monster\WebSurge\wwwroot\WebPackageViewer.exe";
-            var packageFile = @"C:\Users\rstrahl\Documents\Documentation Monster\WebSurge\wwwroot\WebPackageViewer-Packaged.exe";
-            var dataFile = @"C:\Users\rstrahl\Documents\Documentation Monster\WebSurge\wwwroot\PackagedSite.zip";
+            var exeFile = @"C:\Users\rstrahl\Documents\Documentation Monster\Documentation Monster\wwwroot\WebPackageViewer.exe";
+            var packageFile = @"C:\Users\rstrahl\Documents\Documentation Monster\Documentation Monster\wwwroot\WebPackageViewer-Packaged.exe";
+            var dataFile = @"C:\Users\rstrahl\Documents\Documentation Monster\Documentation Monster\wwwroot\PackagedSite.zip";
 
             Assert.IsTrue(pack.PackageFile(packageFile, exeFile, dataFile), pack.ErrorMessage);
 
@@ -35,15 +35,6 @@ namespace WebPackageViewer.Tests
 
         }
 
-        [TestMethod]
-        public void AddResourceToExe()
-        {
-            var ResourceUpdater = new NativeResourceHelper();
-            NativeResourceHelper.UpdateResource(@"d:\temp\WebPackageViewer.exe", @"d:\temp\website_data.zip");
-
-
-
-        }
       
     }
 }
