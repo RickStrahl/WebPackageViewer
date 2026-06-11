@@ -2,8 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Text;
-using System.Windows;
+using System.Reflection;
 using WebPackageViewer.Utilities;
 
 namespace WebPackageViewer
@@ -13,20 +12,13 @@ namespace WebPackageViewer
     /// A file packager that can package a folder as a Zip file and 
     /// package into single file Exe and back into the 
     /// separate EXE and data parts.
+    /// 
+    /// It uses Native Resources that are embedded directly into the 
+    /// WebPackager exe and extracted from it.
     /// </summary>
     public class FilePackager
     {
-        /// <summary>
-        /// String that separates the EXE binary and the data attached.
-        /// </summary>
-        public string SepararatorString = "--- DATASEPARATOR ---";
-
-        /// <summary>
-        /// Separator as a byte array
-        /// </summary>
-        public byte[] SeparatorBytes => Encoding.UTF8.GetBytes(SepararatorString ?? string.Empty);
-
-
+    
         /// <summary>
         /// Packages a file by combining the package EXE file and the datafile.
         /// 
@@ -53,20 +45,25 @@ namespace WebPackageViewer
             if (File.Exists(packageFilename))           
                 File.Delete(packageFilename);
 
-            using (var outFs = new FileStream(packageFilename, FileMode.Create, FileAccess.Write))
+            File.Copy(exeFilename, packageFilename, true);
+
+
+            // updates WEBSITE_DATA native resource with the zipped up Web site data 
+            // in byte form. 
+            NativeResourceHelper.UpdateResource(packageFilename, dataFilename, "WEBSITE_DATA");
+          
+
+            if (!string.IsNullOrEmpty(App.CommandLine.SignCommand))
             {
-                using (var fs = new FileStream(exeFilename, FileMode.Open, FileAccess.Read, FileShare.Read))
+                var cmd = App.CommandLine.SignCommand.Replace("%1", "\"" + packageFilename + "\"");
+                try
                 {
-                    fs.CopyTo(outFs);
-                    outFs.Flush();
-                    outFs.Write(SeparatorBytes, 0, SeparatorBytes.Length);
-                };
-                using (var fs = new FileStream(dataFilename, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    ExecuteCommandLine(cmd, Path.GetDirectoryName(packageFilename), useShellExecute: false);
+                }
+                catch
                 {
-                    fs.CopyTo(outFs);
                 }
             }
-
             return true;
         }
 
@@ -118,7 +115,7 @@ namespace WebPackageViewer
             string outputPath = null,
             bool unZip = true,
             bool noDirectoryCheck = false)
-        {   
+        {           
             if (!File.Exists(packageFilename))
             {
                 SetError("Package file does not exist.");
@@ -133,37 +130,22 @@ namespace WebPackageViewer
             
             Directory.CreateDirectory(outputPath);
 
-            var offset = FindMarkerOffset(packageFilename, SeparatorBytes);
-            if (offset < 0)
-            {
-                SetError("File is missing Packaged Html Data.");
-                return false;
-            }
 
-            ;
-            
             var exeFile = Path.Combine(outputPath, "WebPackageViewer.exe");
+
+
+            
             if (File.Exists(exeFile))
             {
                 File.Delete(exeFile);                
             }   
-            using (var exeFs = new FileStream(exeFile, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
-            using (var fs = new FileStream(packageFilename, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                CopyToBytes(fs, exeFs, offset - SeparatorBytes.Length);
-                fs.Flush();
-            }
-            
-
+        
+            File.Copy( Assembly.GetExecutingAssembly().Location, exeFile, true );
+                        
             var packageFile = Path.Combine(outputPath, "Packaged.zip");
-            
-            using (var packageFs = new FileStream(packageFile, FileMode.Create, FileAccess.Write, FileShare.Write))
-            using (var fs = new FileStream(packageFilename, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                fs.Seek(offset, SeekOrigin.Begin);
-                fs.CopyTo(packageFs);
-                packageFs.Flush();
-            }
+            var siteBytes = NativeResourceHelper.ReadResource("WEBSITE_DATA");            
+           
+            File.WriteAllBytes(packageFile, siteBytes);
             
             if (unZip)
             {                
@@ -173,6 +155,11 @@ namespace WebPackageViewer
                 }
                 //try { File.Delete(packageFile); } catch { /* ignore */ }
             }
+
+            if (App.CommandLine.RemoveResources)
+                NativeResourceHelper.UpdateResource(exeFile, "CLEAR", "WEBSITE_DATA");
+
+
 
             return true;
         }
@@ -239,70 +226,68 @@ namespace WebPackageViewer
         }
 
 
-        /// <summary>
-        /// Like CopyTo but allows you to specify the number of bytes to copy and a buffer size.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="destination"></param>
-        /// <param name="bytesToCopy"></param>
-        /// <param name="bufferSize"></param>
-        void CopyToBytes(Stream source, Stream destination, long bytesToCopy, int bufferSize = 81920)
+        static void ExecuteCommandLine(string fullCommandLine,
+            string workingFolder = null,
+            int waitForExitMs = 0,
+            string verb = "OPEN",
+            ProcessWindowStyle windowStyle = ProcessWindowStyle.Normal,
+            bool useShellExecute = true)
         {
-            byte[] buffer = new byte[Math.Min(bufferSize, (int)bytesToCopy)];
-            int bytesRead;
-            long totalCopied = 0;
+            string executable = fullCommandLine;
+            string args = null;
 
-            while (totalCopied < bytesToCopy &&
-                   (bytesRead = source.Read(buffer, 0, (int)Math.Min(buffer.Length, bytesToCopy - totalCopied))) > 0)
+            if (executable.StartsWith("\""))
             {
-                destination.Write(buffer, 0, bytesRead);
-                totalCopied += bytesRead;
-            }
-        }
-
-        /// <summary>
-        /// Find the offset of a marker in a file.
-        /// </summary>
-        /// <param name="exePath"></param>
-        /// <param name="marker"></param>
-        /// <returns></returns>
-        public long FindMarkerOffset(string exePath, byte[] marker)
-        {            
-            const int bufferSize = 4096;
-            byte[] buffer = new byte[bufferSize + marker.Length - 1];
-
-            using (var fs = new FileStream(exePath, FileMode.Open, FileAccess.Read))
-            {
-                long position = 0;
-                int bytesRead;
-
-                while ((bytesRead = fs.Read(buffer, 0, buffer.Length)) > 0)
+                int at = executable.IndexOf("\" ");
+                if (at > 0)
                 {
-                    for (int i = 0; i <= bytesRead - marker.Length; i++)
-                    {
-                        bool match = true;
-                        for (int j = 0; j < marker.Length; j++)
-                        {
-                            if (buffer[i + j] != marker[j])
-                            {
-                                match = false;
-                                break;
-                            }
-                        }
-
-                        if (match)
-                            return position + i + marker.Length;
-                    }
-
-                    // Slide window back for overlap (in case marker splits across reads)
-                    if (bytesRead < marker.Length)
-                        break;
-                    position += bytesRead - marker.Length + 1;
-                    fs.Seek(position, SeekOrigin.Begin);
+                    // take the args as provided
+                    args = executable.Substring(at + 1);
+                    // plain executable
+                    executable = executable.Substring(0, at).Trim(' ', '\"');
                 }
             }
+            else if (executable.StartsWith("\'"))
+            {
+                int at = executable.IndexOf("\' ");
+                if (at > 0)
+                {
+                    // take the args as provided
+                    args = executable.Substring(at + 1);
+                    // plain executable
+                    executable = executable.Substring(0, at).Trim(' ', '\'');
+                }
+            }
+            else
+            {
+                int at = executable.IndexOf(" ");
+                if (at > 0)
+                {
 
-            return -1;
+                    if (executable.Length > at + 1)
+                        args = executable.Substring(at + 1).Trim();
+                    executable = executable.Substring(0, at);
+                }
+            }
+            var pi = new ProcessStartInfo
+            {
+                Verb = verb,
+                WindowStyle = windowStyle,
+                FileName = executable,
+                WorkingDirectory = workingFolder,
+                Arguments = args,
+                UseShellExecute = true
+            };
+
+            Process p;
+            using (p = Process.Start(pi))
+            {
+                if (waitForExitMs > 0)
+                {
+                    if (!p.WaitForExit(waitForExitMs))
+                        throw new TimeoutException("Process failed to complete in time.");
+                }
+            }
         }
 
         public string ErrorMessage { get; set; }

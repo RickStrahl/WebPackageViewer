@@ -4,25 +4,30 @@
 		<TargetFramework>net472</TargetFramework>	
 		<UseWPF>true</UseWPF>
 		<Version>1.0.3</Version>
+		<AssemblyVersion>1.0.3.0</AssemblyVersion>
+		<FileVersion>1.0.3.0</FileVersion>
+		<InformationalVersion>1.0.3</InformationalVersion>
 		<PublishSingleFile>true</PublishSingleFile>
 		<SelfContained>false</SelfContained>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<PublishTrimmed>false</PublishTrimmed>
-		<ApplicationIcon>WebPackageViewer.ico</ApplicationIcon>
 
 		<Title>Web Package Viewer</Title>
 		<Product>Web Package Viewer</Product>
 		<FileDescription>Web Package Viewer</FileDescription>
 		<Authors>Rick Strahl</Authors>
 		<Company>West Wind Technologies</Company>
-		<Copyright>© Rick Strahl - West Wind Technologies, 2023-2025</Copyright>
+		<Copyright>© Rick Strahl - West Wind Technologies, 2023-2026</Copyright>
 		<Description>Web Package Viewer is local Web Site self-contained, packaging tool that allows you to run and view a static Web site including all dependencies without requiring a web server. Can load local data, and make client side local Http requests.</Description>
 		
 		<PlatformTarget>AnyCPU</PlatformTarget>
-		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<LangVersion>latest</LangVersion>
+		
+		<!-- Native Resource Embedding Compilation -->
+		<NativeResFile>$(MSBuildProjectDirectory)\obj\$(Configuration)\$(TargetFramework)\$(RuntimeIdentifier)\NativeResources.res</NativeResFile>
+		<RcExe Condition="'$(RcExe)'=='' and Exists('$(MSBuildProgramFiles32)\Windows Kits\10\bin\10.0.26100.0\x64\rc.exe')">$(MSBuildProgramFiles32)\Windows Kits\10\bin\10.0.26100.0\x64\rc.exe</RcExe>
+		<Win32Resource>$(NativeResFile)</Win32Resource>
 	</PropertyGroup>
-	
 	
 	<ItemGroup>
 	  <Resource Include="WebPackageViewer.ico" />
@@ -45,9 +50,16 @@
 				
 	</ItemGroup>
 
-	<ItemGroup>
-		<Resource Include="webview2loader.dll" />
-	</ItemGroup>
+
+	<Target Name="BuildNativeResources"
+	        BeforeTargets="CoreCompile"
+	        Inputs="$(MSBuildProjectDirectory)\Properties\Resources.rc;$(MSBuildProjectDirectory)\website_data.zip;$(MSBuildProjectDirectory)\webview2loader.dll;$(MSBuildProjectDirectory)\WebPackageViewer.ico;$(MSBuildProjectDirectory)\app.manifest"
+	        Outputs="$(NativeResFile)">
+	  <Error Condition="'$(RcExe)'==''" Text="Windows resource compiler (rc.exe) not found. Install Windows 10 SDK or set RcExe MSBuild property." />
+	  <MakeDir Directories="$([System.IO.Path]::GetDirectoryName('$(NativeResFile)'))" />
+	  <Exec Command="&quot;$(RcExe)&quot; /nologo /fo &quot;$(NativeResFile)&quot; &quot;$(MSBuildProjectDirectory)\Properties\Resources.rc&quot;"
+	        WorkingDirectory="$(MSBuildProjectDirectory)" />
+	</Target>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 	  <Exec Command="pwsh -ExecutionPolicy Bypass -File ..\install\build.ps1" />

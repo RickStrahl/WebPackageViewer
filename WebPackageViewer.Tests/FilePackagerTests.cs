@@ -1,4 +1,5 @@
-﻿using System.IO;
+using System.IO;
+using WebPackageViewer.Utilities;
 
 namespace WebPackageViewer.Tests
 {
@@ -33,5 +34,17 @@ namespace WebPackageViewer.Tests
             Assert.IsTrue(pack.UnpackageFile(packageFile,unpackFolder), pack.ErrorMessage);
 
         }
+
+        [TestMethod]
+        public void AddResourceToExe()
+        {
+            var ResourceUpdater = new NativeResourceHelper();
+            NativeResourceHelper.UpdateResource(@"d:\temp\WebPackageViewer.exe", @"d:\temp\website_data.zip");
+
+
+
+        }
+      
     }
 }
+

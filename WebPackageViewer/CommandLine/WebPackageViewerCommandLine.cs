@@ -52,6 +52,18 @@ namespace WebPackageViewer.CommandLine
         /// </summary>
         public bool Unhandled { get; set; }
 
+
+        /// <summary>
+        /// Optional command to sign the EXE when packaging.
+        /// Should be a CMD executable command - an exe or cmd/ps1/bat 
+        /// that can sign the package file. Use %1 as the exe name place
+        /// holder.
+        /// </summary>
+        public string SignCommand { get; set; }
+
+        public bool RemoveResources { get; set; }
+
+
         public override void Parse()
         {
             try
@@ -90,6 +102,8 @@ namespace WebPackageViewer.CommandLine
             VirtualPath = ParseStringParameterSwitch("--virtual", null);
             InitialUrl = ParseStringParameterSwitch("--initialurl", null);
             WindowTitle = ParseStringParameterSwitch("--windowtitle", null);
+            SignCommand = ParseStringParameterSwitch("--signcommand", null);
+            RemoveResources = ParseParameterSwitch("-removeresources");
 
 
             var first = FirstParameter?.ToLowerInvariant() ?? string.Empty;
@@ -197,6 +211,9 @@ namespace WebPackageViewer.CommandLine
                     --virtual     - Virtual Path when running the site (/,/docs)
                     --initialurl  - Initial URL to load in the WebView (/index.html, /docs/index.html)
                     --windowtitle - Window title displayed on the Window
+                    --signcommand - Optional command to sign the EXE when packaging. 
+                                    Should be a CMD executable command - an exe or cmd/ps1/
+                                    that can sign the package file. Use %1 as the exe name place holder.
                     """
                     , ConsoleColor.White);
 

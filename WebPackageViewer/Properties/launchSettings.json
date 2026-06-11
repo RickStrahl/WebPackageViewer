@@ -2,14 +2,13 @@
   "profiles": {
     "Viewer Mode": {
       "commandName": "Project",
-      "workingDirectory": "%USERPROFILE%\\Documents\\Documentation Monster\\WebSurge\\wwwroot",
-      "commandLineArgs": "--virtual /docs -u /docs/index.html"
-
+      "commandLineArgs": "--virtual /docs -u /docs/index.html",
+      "workingDirectory": "%USERPROFILE%\\Documents\\Documentation Monster\\WebSurge\\wwwroot"
     },
     "Package Mode": {
       "commandName": "Project",
-      "commandLineArgs": "package --output WebViewPackager-Packaged.exe --exe \"c:\\projects\\WebPackageViewer\\WebPackageViewer.exe\" --zipfolder .\\",
-      "workingDirectory": "%USERPROFILE%\\Documents\\Documentation Monster\\WebSurge\\wwwroot"
+      "commandLineArgs": "package --output d:\\projects\\Tools\\WebPackageViewer\\WebViewPackager-Packaged.exe --exe \"d:\\projects\\Tools\\WebPackageViewer\\WebPackageViewer.exe\" --zipfolder .\\  --signcommand \"signfile.cmd %1\" ",
+      "workingDirectory": "%USERPROFILE%\\Documents\\Documentation Monster\\Documentation Monster\\wwwroot"
     },
     "Package Mode 2": {
       "commandName": "Project",
@@ -18,7 +17,7 @@
     },
     "Package ZipFolder": {
       "commandName": "Project",
-      "commandLineArgs": "package --output \"C:\\temp\\WebSurge-Documentation-Viewer.exe\" --exe \"d:\\projects\\WebPackageViewer\\WebPackageViewer.exe\"  --zipfolder \"C:\\Users\\rstrahl\\Documents\\Documentation Monster\\WebSurge\\wwwroot\"",      
+      "commandLineArgs": "package --output \"C:\\temp\\WebSurge-Documentation-Viewer.exe\" --exe \"d:\\projects\\WebPackageViewer\\WebPackageViewer.exe\"  --zipfolder \"C:\\Users\\rstrahl\\Documents\\Documentation Monster\\WebSurge\\wwwroot\""
     },
     "Help Mode": {
       "commandName": "Project",
@@ -26,9 +25,12 @@
       "workingDirectory": "C:\\Users\\rstrahl\\Documents\\Documentation Monster\\Documentation Monster\\wwwroot"
     },
     "Packaged Debug": {
-      "executablePath": "C:\\Users\\rstrahl\\Documents\\Documentation Monster\\WebSurge\\wwwroot\\WestWindWebsurge-Documentation-Viewer.exe"
+      "executablePath": "D:\\projects\\Tools\\WebPackageViewer\\WebPackageViewer.exe"
+    },
+    "Packaged Exe (unpackage debugging)": {
+      "commandName": "Executable",
+      "executablePath": "D:\\projects\\Tools\\WebPackageViewer\\WebPackageViewer.exe",
+      "workingDirectory": "D:\\projects\\Tools\\WebPackageViewer"
     }
-
-
   }
 }
