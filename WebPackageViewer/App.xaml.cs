@@ -36,31 +36,9 @@ namespace WebPackageViewer
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            if (!File.Exists("WebView2Loader.dll"))
-            {
-                // If the loader is not present, we may be running from a single file bundle and need to unpack first
-                try
-                {
-                    var loaderBytes = ResourceHelper.LoadWebView2LoaderBytes();             
-                    File.WriteAllBytes("WebView2Loader.dll", loaderBytes);
-                }
-                catch
-                {
-                    MessageBox.Show(
-"""
-An error occurred unpacking the WebView2Loader.dll resource.
-
-Make sure the application is not running from a read-only location and that you have permissions to write to the current directory.
-
-Alternately manually copy `WebView2Loader.dll` from the same folder as the WebPackageViewer.exe to the current directory and restart the application.`
-""", 
-                                        "Web Viewer Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                        Environment.Exit(1);
-                }
-            }
 
 
-
+            
             bool attached = AttachConsole(-1);
 
             CommandLine.Parse();
@@ -134,6 +112,30 @@ Alternately manually copy `WebView2Loader.dll` from the same folder as the WebPa
                         
             if (attached)
                 FreeConsole();
+
+
+            if (!File.Exists("WebView2Loader.dll"))
+            {
+                // If the loader is not present, we may be running from a single file bundle and need to unpack first
+                try
+                {
+                    var loaderBytes = ResourceHelper.LoadWebView2LoaderBytes();
+                    File.WriteAllBytes("WebView2Loader.dll", loaderBytes);
+                }
+                catch
+                {
+                    MessageBox.Show(
+                        """
+                        An error occurred unpacking the WebView2Loader.dll resource.
+
+                        Make sure the application is not running from a read-only location and that you have permissions to write to the current directory.
+
+                        Alternately manually copy `WebView2Loader.dll` from the same folder as the WebPackageViewer.exe to the current directory and restart the application.`
+                        """,
+                        "Web Viewer Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    Environment.Exit(1);
+                }
+            }
 
             MainWindow mainWindow = new MainWindow(config);
             mainWindow.Show();
