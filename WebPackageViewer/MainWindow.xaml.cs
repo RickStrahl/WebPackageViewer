@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -66,7 +67,7 @@ namespace WebPackageViewer
 
                 // Handle top level links
                 webView.NavigationStarting += (s, e) =>
-                {                    
+                {
                     var virt = Configuration.VirtualPath.Trim('/');
                     if (App.CommandLine.VirtualPath != null)
                         virt = App.CommandLine.VirtualPath.Trim('/');
@@ -74,13 +75,13 @@ namespace WebPackageViewer
                     var uri = e.Uri;
                     if (string.IsNullOrEmpty(virt))
                     {
-                        e.Cancel = false ;
+                        e.Cancel = false;
                         // just let the control navigate                        
                     }
                     else if (uri.Contains($"/{virt}/"))
-                    {                        
+                    {
                         var newUri = uri.Replace($"/{virt}/", "/");
-                        e.Cancel = true;                        
+                        e.Cancel = true;
                         webView.CoreWebView2.Navigate(newUri);
                     }
                     else if (uri.EndsWith($"/{virt}"))
@@ -91,6 +92,12 @@ namespace WebPackageViewer
                     }
                 };
 
+                // Unfortunately doesn't work with virtual folder mapping (ie. /docs/ link resolution)
+                // So below we use WebResourceRequested instead.
+                //webView.CoreWebView2.SetVirtualHostNameToFolderMapping(
+                //    "webviewer.host", Configuration.WebRootPath,
+                //    CoreWebView2HostResourceAccessKind.Allow);
+
                 // Handled embedded reosource links
                 // look at all resource requests and serve local files
                 webView.CoreWebView2.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All); 
@@ -98,6 +105,9 @@ namespace WebPackageViewer
                 {
                     var uri = new Uri(args.Request.Uri);                    
                     var suri = uri.ToString();
+
+                    if (!suri.Contains("https://webviewer.host"))
+                        return; // pass through
 
                     var absolutePath = uri.AbsolutePath;                    
                     if (absolutePath == "/")
