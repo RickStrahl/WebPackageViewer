@@ -197,7 +197,7 @@ namespace WebPackageViewer.CommandLine
                     """
                     , ConsoleColor.White);
 
-                ColorConsole.WriteLine("\nOptions:", ConsoleColor.Green);
+                ColorConsole.WriteLine("\nPackaging Options:", ConsoleColor.Green);
                 ColorConsole.WriteLine(
                     """
                     --source      - Source folder to create package from - if omitted current folder is used
@@ -206,12 +206,18 @@ namespace WebPackageViewer.CommandLine
                     --exe         - Optional Exe file to package. If not specified source exe is used
                     --zipfile     - An existing Zip File to package (priortized over --zipfolder)
                     --zipfolder   - A folder to zip up and then package
-                    --virtual     - Virtual Path when running the site (/,/docs)
-                    --initialurl  - Initial URL to load in the WebView (/index.html, /docs/index.html)
-                    --windowtitle - Window title displayed on the Window
                     --signcommand - Optional command to sign the EXE when packaging. 
                                     Should be a CMD executable command - an exe or cmd/ps1/
                                     that can sign the package file. Use %1 as the exe name place holder.
+                                   
+                    """);
+
+                ColorConsole.WriteLine("Viewer Mode Options:", ConsoleColor.Green);
+                ColorConsole.WriteLine(
+                    """
+                    --virtual     - Virtual Path when running the site (/,/docs)
+                    --initialurl  - Initial URL to load in the WebView (/index.html, /docs/index.html)
+                    --windowtitle - Window title displayed on the Window
                     """
                     , ConsoleColor.White);
 
