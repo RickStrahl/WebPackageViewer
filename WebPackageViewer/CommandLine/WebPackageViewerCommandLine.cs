@@ -11,8 +11,6 @@ namespace WebPackageViewer.CommandLine
     public class WebPackageViewerCommandLine : CommandLineParser
     {
 
-        public string SourcePath { get; set; }
-
         public string OutputPath { get; set; }
 
         public string PackageFile { get; set; }
@@ -70,9 +68,6 @@ namespace WebPackageViewer.CommandLine
             }
             catch { }
 
-            SourcePath = ParseStringParameterSwitch("--source", null);
-            if (SourcePath != null)
-                SourcePath = Environment.ExpandEnvironmentVariables(SourcePath);
             OutputPath = ParseStringParameterSwitch("--output", null);
             if (OutputPath != null)
                 OutputPath = Environment.ExpandEnvironmentVariables(OutputPath);
@@ -157,7 +152,7 @@ namespace WebPackageViewer.CommandLine
 
                 // don't return here - we want to run the unpackaged site
             }
-            else if (first == "help" || first == "?")
+            else if (first == "help" || first == "?" || first == "/?")
             {
                 var version = typeof(MainWindow).Assembly.GetName().Version;
                 ConsoleHelper.WriteWrappedHeader("West Wind Web Package Viewer v" + version.Major + "." + version.Minor + "." + version.Build);
@@ -200,7 +195,6 @@ namespace WebPackageViewer.CommandLine
                 ColorConsole.WriteLine("\nPackaging Options:", ConsoleColor.Green);
                 ColorConsole.WriteLine(
                     """
-                    --source      - Source folder to create package from - if omitted current folder is used
                     --output      - package: Output filename for the packaged exe
                                     unpackage: Output folder where the Web site and Exe is unpackaged to
                     --exe         - Optional Exe file to package. If not specified source exe is used
@@ -208,8 +202,7 @@ namespace WebPackageViewer.CommandLine
                     --zipfolder   - A folder to zip up and then package
                     --signcommand - Optional command to sign the EXE when packaging. 
                                     Should be a CMD executable command - an exe or cmd/ps1/
-                                    that can sign the package file. Use %1 as the exe name place holder.
-                                   
+                                    that can sign the package file. Use %1 as the exe name place holder.                                           
                     """);
 
                 ColorConsole.WriteLine("Viewer Mode Options:", ConsoleColor.Green);
@@ -218,10 +211,9 @@ namespace WebPackageViewer.CommandLine
                     --virtual     - Virtual Path when running the site (/,/docs)
                     --initialurl  - Initial URL to load in the WebView (/index.html, /docs/index.html)
                     --windowtitle - Window title displayed on the Window
+
                     """
                     , ConsoleColor.White);
-
-                Console.WriteLine("\n");
 
                 ColorConsole.WriteLine("Configuration File", ConsoleColor.Green);
                 Console.WriteLine("You can optionally provide a configuration in your Webroot Folder\n" +
