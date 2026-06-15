@@ -36,10 +36,8 @@ namespace WebPackageViewer
 
         protected override void OnStartup(StartupEventArgs e)
         {
-
-
             
-            bool attached = AttachConsole(-1);
+            bool attached  = AttachConsole(-1);
 
             CommandLine.Parse();
 
@@ -112,7 +110,6 @@ namespace WebPackageViewer
                         
             if (attached)
                 FreeConsole();
-
 
             if (!File.Exists("WebView2Loader.dll"))
             {

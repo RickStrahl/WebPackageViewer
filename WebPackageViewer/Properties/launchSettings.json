@@ -7,7 +7,7 @@
     },
     "Package Mode": {
       "commandName": "Project",
-      "commandLineArgs": "package --output d:\\projects\\Tools\\WebPackageViewer\\WebViewPackager-Packaged.exe --exe \"d:\\projects\\Tools\\WebPackageViewer\\WebPackageViewer.exe\" --zipfolder .\\  --signcommand \"signfile.cmd %1\" ",
+      "commandLineArgs": "package --output d:\\projects\\Tools\\WebPackageViewer\\WebViewPackager-Packaged.exe --exe \"d:\\projects\\Tools\\WebPackageViewer\\WebPackageViewer.exe\" --zipfolder .\\   ",
       "workingDirectory": "%USERPROFILE%\\Documents\\Documentation Monster\\Documentation Monster\\wwwroot"
     },
     "Package Mode 2": {

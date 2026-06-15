@@ -150,7 +150,8 @@ namespace WebPackageViewer.CommandLine
                 Console.WriteLine("Package has unpacked into:");
                 ColorConsole.WriteLine(OutputPath, ConsoleColor.DarkYellow);
 
-                // don't return here - we want to run the unpackaged site
+                return;
+                // don't return here - we might want to run the unpackaged site        
             }
             else if (first == "help" || first == "?" || first == "/?")
             {

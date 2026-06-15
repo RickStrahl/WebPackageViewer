@@ -114,7 +114,28 @@ namespace WebPackageViewer
 
             try
             {
-                ZipFile.CreateFromDirectory(zipFolder, outputZipFilename, CompressionLevel.Optimal, false);
+                // manually zip the folder so we can filter files based on extension
+                using (var zip = ZipFile.Open(outputZipFilename, ZipArchiveMode.Create))
+                {
+                    var baseUri = new Uri(zipFolder.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar);
+
+                    foreach (var file in Directory.GetFiles(zipFolder, "*", SearchOption.AllDirectories))
+                    {
+                        if (Path.GetExtension(file).Equals(".exe", StringComparison.OrdinalIgnoreCase) ||
+                            Path.GetExtension(file).Equals(".dll", StringComparison.OrdinalIgnoreCase) ||
+                            Path.GetExtension(file).Equals(".zip", StringComparison.OrdinalIgnoreCase))
+                            continue;
+
+                        // Preserve relative path structure inside the zip
+                        var relativePath = baseUri.MakeRelativeUri(new Uri(file)).ToString();
+                        // MakeRelativeUri uses forward slashes and URI-encodes spaces etc., so convert back
+                        relativePath = Uri.UnescapeDataString(relativePath).Replace('/', Path.DirectorySeparatorChar);
+
+                        zip.CreateEntryFromFile(file, relativePath, CompressionLevel.Optimal);
+                    }
+               }
+
+                // ZipFile.CreateFromDirectory(zipFolder, outputZipFilename, CompressionLevel.Optimal, false);
             }
             catch (Exception ex)
             {
