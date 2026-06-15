@@ -36,7 +36,10 @@ namespace WebPackageViewer
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            
+
+            InitialStartDirectory = AppContext.BaseDirectory.TrimEnd('/');
+            InitialUserStartedDirectory = Environment.CurrentDirectory;
+
             bool attached  = AttachConsole(-1);
 
             CommandLine.Parse();
@@ -44,7 +47,12 @@ namespace WebPackageViewer
             if (!CommandLine.Unhandled)
             {
                 if (attached)
-                    FreeConsole();
+                {
+                    
+                    ReleaseConsolePrompt();
+                }
+
+
                 // If handled, exit the application
                 Environment.Exit(0);
             }
@@ -67,7 +75,10 @@ namespace WebPackageViewer
                             MessageBoxImage.Exclamation);
                     }
                     else
+                    {
                         Console.WriteLine("\n❌ Error:\n" + pack.ErrorMessage);
+                        ReleaseConsolePrompt();
+                    }
 
                     Environment.Exit(1);
                 }
@@ -79,13 +90,14 @@ namespace WebPackageViewer
                 Console.Write("\n✅ Launching Web Viewer...");
 
                 if (attached)
-                    FreeConsole();
+                    ReleaseConsolePrompt();
 
                 Environment.Exit(0);
             }
 
-            InitialStartDirectory = AppContext.BaseDirectory.TrimEnd('/');
-            InitialUserStartedDirectory = Environment.CurrentDirectory;
+            if (attached)
+                ReleaseConsolePrompt();
+
 
             // Read configuration from Json and override with explicit values passed
             var config = WebViewerConfiguration.Read();
@@ -108,10 +120,10 @@ namespace WebPackageViewer
                          
             base.OnStartup(e);
                         
-            if (attached)
-                FreeConsole();
+            
 
-            if (!File.Exists("WebView2Loader.dll"))
+            var exePath = Path.Combine(InitialStartDirectory, "WebView2Loader.dll");
+            if (!File.Exists(exePath))
             {
                 // If the loader is not present, we may be running from a single file bundle and need to unpack first
                 try
@@ -170,6 +182,17 @@ namespace WebPackageViewer
 
         [DllImport("kernel32.dll", SetLastError = true)]
         static extern bool AttachConsole(int dwProcessId);
+
+        [DllImport("user32.dll")] static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, nuint dwExtraInfo);
+
+        const byte VK_RETURN = 0x0D;
+
+        static void ReleaseConsolePrompt()
+        {
+            FreeConsole();
+            keybd_event(VK_RETURN, 0, 0, 0);         // key down
+            keybd_event(VK_RETURN, 0, 0x0002, 0);    // key up (KEYEVENTF_KEYUP)
+        }
     }
 
 
@@ -207,4 +230,6 @@ namespace WebPackageViewer
             throw new FileNotFoundException("WebPackageViewer.g.resources not found.");
         }
     }
+
+    
 }
