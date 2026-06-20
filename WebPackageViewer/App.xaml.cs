@@ -23,6 +23,9 @@ namespace WebPackageViewer
 
         public static WebPackageViewerCommandLine CommandLine { get; set; } = new WebPackageViewerCommandLine();
 
+        public static bool IsConsoleApp { get; } = StartedFromConsole();
+
+
         protected void LogString(string message)
         {
             if (!message.EndsWith("\r\n"))
@@ -37,21 +40,21 @@ namespace WebPackageViewer
         protected override void OnStartup(StartupEventArgs e)
         {
 
+
+            if (IsConsoleApp)
+            {
+                AttachConsole(-1);
+            }
+
             InitialStartDirectory = AppContext.BaseDirectory.TrimEnd('/');
             InitialUserStartedDirectory = Environment.CurrentDirectory;
-
-            bool attached  = AttachConsole(-1);
 
             CommandLine.Parse();
 
             if (!CommandLine.Unhandled)
             {
-                if (attached)
-                {
-                    
+                if (IsConsoleApp)
                     ReleaseConsolePrompt();
-                }
-
 
                 // If handled, exit the application
                 Environment.Exit(0);
@@ -68,18 +71,10 @@ namespace WebPackageViewer
                 
                 if (!pack.UnpackageFile(exeFile, outputPath, true))
                 {
-                    if (!attached)
-                    {
-                        MessageBox.Show("An error occurred unpacking the viewer app and Web site.\n" +
-                                        pack.ErrorMessage, "Web Viewer Error", MessageBoxButton.OK,
-                            MessageBoxImage.Exclamation);
-                    }
-                    else
-                    {
-                        Console.WriteLine("\n❌ Error:\n" + pack.ErrorMessage);
-                        ReleaseConsolePrompt();
-                    }
-
+                    MessageBox.Show("An error occurred unpacking the viewer app and Web site.\n" +
+                                    pack.ErrorMessage, "Web Viewer Error", MessageBoxButton.OK,
+                        MessageBoxImage.Exclamation);
+                             
                     Environment.Exit(1);
                 }
                 Environment.CurrentDirectory = outputPath;
@@ -89,14 +84,14 @@ namespace WebPackageViewer
 
                 Console.Write("\n✅ Launching Web Viewer...");
 
-                if (attached)
-                    ReleaseConsolePrompt();
+                //if (attached)
+                //    ReleaseConsolePrompt();
 
                 Environment.Exit(0);
             }
 
-            if (attached)
-                ReleaseConsolePrompt();
+            //if (attached)
+            //    ReleaseConsolePrompt();
 
 
             // Read configuration from Json and override with explicit values passed
@@ -192,6 +187,18 @@ namespace WebPackageViewer
             FreeConsole();
             keybd_event(VK_RETURN, 0, 0, 0);         // key down
             keybd_event(VK_RETURN, 0, 0x0002, 0);    // key up (KEYEVENTF_KEYUP)
+        }
+
+        static bool StartedFromConsole()
+        {
+            if (AttachConsole(-1))
+            {
+                FreeConsole();
+                return true;
+            }
+
+            // Already attached to a console also means console-launched.
+            return Marshal.GetLastWin32Error() == 5;
         }
     }
 

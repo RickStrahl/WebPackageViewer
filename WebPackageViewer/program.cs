@@ -1,5 +1,6 @@
 
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using WebPackageViewer;
 
@@ -11,15 +12,24 @@ class Program
     [STAThread]
     static int Main(string[] args)
     {
-        string commandLine = Environment.CommandLine;
+        //string commandLine = Environment.CommandLine;
 
-        if (args.Length == 0 || 
-            (!commandLine.Contains("package ") ||
-             !commandLine.Contains("unpackage ") ))
-        {
-            // hide the Console window immediately
-            ShowWindow(GetConsoleWindow(), 0); // hide console flash
-        }
+
+        //string firstParm = string.Empty;
+        //if (args.Length > 0)
+        //    firstParm = args[0];
+        //bool startedFromConsole = StartedFromConsole();
+        
+        //if (!startedFromConsole)
+        //{
+        //    //if (args.Length == 0 ||
+        //    //    (!args[0].Contains("package ") &&
+        //    //     !args[0].Contains("unpackage ") &&
+        //    //     !args[0].Contains("help")))
+
+        //    // hide the Console window immediately
+        //    ShowWindow(GetConsoleWindow(), 0); // hide console flash
+        //}
 
         var app = new App();
         app.InitializeComponent();
@@ -27,4 +37,13 @@ class Program
 
         return 0;
     }
+
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    static extern bool AttachConsole(int dwProcessId);
+
+    [DllImport("kernel32.dll")]
+    static extern bool FreeConsole();
+
+   
 }
