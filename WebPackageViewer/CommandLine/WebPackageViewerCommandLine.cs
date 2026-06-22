@@ -91,6 +91,7 @@ namespace WebPackageViewer.CommandLine
 
             PackageFile = ParseStringParameterSwitch("--package", "packageFile");
             if (!string.IsNullOrEmpty(PackageFile))
+
                 PackageFile = Environment.ExpandEnvironmentVariables(PackageFile);
             VirtualPath = ParseStringParameterSwitch("--virtual", null);
             InitialUrl = ParseStringParameterSwitch("--initialurl", null);
@@ -196,10 +197,12 @@ namespace WebPackageViewer.CommandLine
 
                 ColorConsole.WriteLine("\nPackaging Options:", ConsoleColor.Green);
                 ColorConsole.WriteLine(
-                    """                   
-                    --exe         - Optional Exe file to package. If not specified source exe is used
-                    --zipfile     - An existing Zip File to package (priortized over --zipfolder)
-                    --zipfolder   - A folder to zip up and then package
+                    """
+                    --output      - Output file for the packaged exe
+                                    Optional - Output folder for unpackaged exe
+                    --zipfolder   - A Web site folder to zip up and package
+                    --zipfile     - An existing Zip file to package (priortized over --zipfolder)                    
+                    --package     - Optional - packaged Exe file to unpackage. If not specified this Exe is used.
                     --signcommand - Optional command to sign the EXE when packaging. 
                                     Should be a CMD executable command - an exe or cmd/ps1/
                                     that can sign the package file. Use %1 as the exe name place holder.                                           
@@ -214,6 +217,24 @@ namespace WebPackageViewer.CommandLine
 
                     """
                     , ConsoleColor.White);
+
+                ColorConsole.WriteLine("Examples:", ConsoleColor.Green);
+                ColorConsole.WriteLine(
+                    """
+                    # package Web site from folder
+                    .\webPackageViewer.exe package   
+                        --output .\Packaged.exe      
+                        --zipfolder .\WebSite
+                                
+                    # simply 'run' Web Site
+                    .\Packaged.exe
+
+                    # explicitly unpack
+                    .\webPackageViewer.exe unpackage 
+                        --exe    .\Packaged.exe      
+                        --output .\OutputWebSite                         
+                        
+                    """);
 
                 ColorConsole.WriteLine("Configuration File", ConsoleColor.Green);
                 Console.WriteLine("You can optionally provide a configuration in your Webroot Folder\n" +
