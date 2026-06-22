@@ -5,11 +5,11 @@
 This tool has two main functions to run static Html Web sites on Windows:
 
 * A Web Site Packager that allows packaging of a site into a single Exe
-* A Web Site Runner that simply 'runs' the Web Site out of a folder
+* A Web Site Viewer that simply 'runs' the Web Site out of a folder
 
-The tool is a single executable, and packaged Web sites get packages along with the Exe into a single executable file. The idea is to have a low impact way to display and share local Web content.
+The tool is a single executable, and packaged Web sites get packaged along with the Exe into a single executable file. The idea is to have a low impact way to display and share local Web content.
 
-## Packagings
+## Packaging
 This tool can quickly automate creating a small self-contained Windows Exe that can 'run' a folder as a Web site locally without an Internet connection or Web server. 
 
 The idea is that you can package a static site and run it locally just by launching the EXE which internally loads all links.
@@ -59,7 +59,7 @@ The following command line options are available:
 
 ```
 -----------------------------------
-West Wind Web Package Viewer v1.0.2
+West Wind Web Package Viewer v1.1.6
 -----------------------------------
 A Web Site Viewer that can:
 
@@ -69,7 +69,7 @@ A Web Site Viewer that can:
   and run it to unpack and display the site
 * Can unpackage a packaged Web site into its
   Exe and Web site files
-  
+
 Usage: WebPackageViewer [foldername | command] [options]
 
 Foldername:
@@ -81,16 +81,33 @@ package       - Create a package from an executable and a zip file
 unpackage     - Unpackage the Exe and Website into the output folder
 help          - Show this help message
 
-Options:
---output      - package: Output filename for the packaged exe
-                unpackage: Output folder where the Web site and Exe is unpackaged to
---exe         - Optional Exe file to package. If not specified source exe is used
---zipfile     - An existing Zip File to package (priortized over --zipfolder)
---zipfolder   - A folder to zip up and then package
+Packaging Options:
+--output      - Output file for the packaged exe
+                Optional - Output folder for unpackaged exe
+--zipfolder   - A Web site folder to zip up and package
+--zipfile     - An existing Zip file to package (priortized over --zipfolder)
+--package     - Optional - packaged Exe file to unpackage. If not specified this Exe is used.
+--signcommand - Optional command to sign the EXE when packaging.
+                Should be a CMD executable command - an exe or cmd/ps1/
+                that can sign the package file. Use %1 as the exe name place holder.                                    
+Viewer Mode Options:
 --virtual     - Virtual Path when running the site (/,/docs)
 --initialurl  - Initial URL to load in the WebView (/index.html, /docs/index.html)
 --windowtitle - Window title displayed on the Window
 
+Examples:
+# package Web site from folder
+.\webPackageViewer.exe package
+    --output .\Packaged.exe
+    --zipfolder .\WebSite
+
+# simply 'run' Web Site
+.\Packaged.exe
+
+# explicitly unpack
+.\webPackageViewer.exe unpackage
+    --exe    .\Packaged.exe
+    --output .\OutputWebSite
 
 Configuration File
 You can optionally provide a configuration in your Webroot Folder
@@ -105,10 +122,6 @@ that allows you to customize how the Packaged site runs:
 ```
 
 
-## Current Status
-This project currently is experimental and specifically geared towards the integration in [Documentation Monster](https://documentationmonster.com). It works great for that, but there are some customizations that make it specifically work in this project.
-
-It's possible to customize and integrate with your own solutions. Currently I wouldn't consider this a generic solution that bundles any kind of Web content as WebView only Web browsing has a few limitations. I'm considering adding support for HttpSys based local Web server integration, but that unfortunately requires admin rights to initially to register a local http port.
 
 ### A few things that don't work well
 
@@ -151,17 +164,22 @@ To package a Web Site folder and create a `packaged.exe` file you can use the fo
 		--zipfolder .\
 ```
 
-Output is the package EXE file to create - specify a path here. 
+`--output` is the package Exe file to create, so specify a path here. The path can be relative to the current path. `--zipfolder` specifies folder to zip up and package. This option zips up the folder and all its subfolders which is then unpacked when running the Exe and Viewer.
 
-ZipFolder specifies folder to zip up and attach. This file zips up the folder and all its subfolders which is then unpacked when running the Exe.
-
-Alternately you can use `--zipfile` and specify a custom Zip file that you've created. This is great if you use an application to automate this process when you need to add a few additional files to the zip file for example.
+Alternately you can use `--zipfile` and specify a custom Zip file that you've created. This is great if you use an application to automate this process when you need to add a few additional files to the zip file that aren't present in the folder. I do this in Documentation Monster where I add a configuration file and generate an search index that isn't initially present.
 
 ## Unpackaging
-Unpackaging is internally used by the generated EXE but you can also use it explicitly to unzip a folder and separate out the Exe and data file.
+Typically you don't need to explicit unpackage because you can simply run the Exe, which unpackages and displays the Web site in the built-in Viewer application. This works, but it essentially runs the site out of a temporary folder that is deleted when you shut down the viewer.
 
+If you want to permanently capture Web site and Viewer you can also unpack the Web site and the Exe into a folder explicitly.
 
+```ps
+.\WebPackageViewer unpackage 
+       --package .\WebViewer-Packaged.exe 
+       --output .\OutputWebSite
+```
 
+Once unpackaged you can then run `WebPackageViewer.exe` out of that folder to view the Web site.
 
 ## Example: Integrating Package Generation in an Application
 For a more sophisticated scenario, if you want to generate a package in code as part of an application, here's an example how I create the executable for Documentation Monster.
