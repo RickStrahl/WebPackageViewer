@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/Support/">
+    <File Path="Install/build.ps1" />
+  </Folder>
+  <Project Path="WebPackageViewer.Tests/WebPackageViewer.Tests.csproj" />
+  <Project Path="WebPackageViewer/WebPackageViewer.csproj" />
+</Solution>
