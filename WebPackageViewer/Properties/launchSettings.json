@@ -21,7 +21,7 @@
     },
     "Help Mode": {
       "commandName": "Project",
-      "commandLineArgs": "package --output \"C:\\Users\\rstrahl\\Documents\\Documentation Monster\\Documentation Monster\\wwwroot\\Documentation-Viewer.exe\" --zipFolder \".\"  ",
+      "commandLineArgs": "--help",
       "workingDirectory": "C:\\Users\\rstrahl\\Documents\\Documentation Monster\\Documentation Monster\\wwwroot"
     },
     "Packaged Debug": {

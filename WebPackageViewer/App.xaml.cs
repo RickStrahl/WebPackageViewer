@@ -23,27 +23,20 @@ namespace WebPackageViewer
 
         public static WebPackageViewerCommandLine CommandLine { get; set; } = new WebPackageViewerCommandLine();
 
-        public static bool IsConsoleApp { get; } = StartedFromConsole();
-
-
-        protected void LogString(string message)
-        {
-            if (!message.EndsWith("\r\n"))
-                message += "\r\n";
-
-            using (StreamWriter sw = new StreamWriter(@"logfile.txt", true))
-            {
-                sw.Write(DateTime.Now.ToString("T") + " - " + message);
-            }
-        }
+        public static bool IsConsoleApp { get; set;  }
+      
 
         protected override void OnStartup(StartupEventArgs e)
-        {
+        {            
+            IsConsoleApp =  AttachConsole(-1);
 
 
             if (IsConsoleApp)
             {
-                AttachConsole(-1);
+                // delay slightly to let existing prompt finish and then show our prompt
+                System.Threading.Thread.Sleep(20);
+                // Jump over the secondary prompt so we start our output on clean new line
+                Console.WriteLine();
             }
 
             InitialStartDirectory = AppContext.BaseDirectory.TrimEnd('/');
@@ -84,14 +77,13 @@ namespace WebPackageViewer
 
                 Console.Write("\n✅ Launching Web Viewer...");
 
-                //if (attached)
-                //    ReleaseConsolePrompt();
-
+                if (IsConsoleApp)
+                    ReleaseConsolePrompt();
                 Environment.Exit(0);
             }
 
-            //if (attached)
-            //    ReleaseConsolePrompt();
+            if (IsConsoleApp)
+                ReleaseConsolePrompt();
 
 
             // Read configuration from Json and override with explicit values passed
@@ -141,6 +133,7 @@ namespace WebPackageViewer
                 }
             }
 
+            
             MainWindow mainWindow = new MainWindow(config);
             mainWindow.Show();
 
@@ -178,12 +171,20 @@ namespace WebPackageViewer
         [DllImport("kernel32.dll", SetLastError = true)]
         static extern bool AttachConsole(int dwProcessId);
 
-        [DllImport("user32.dll")] static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, nuint dwExtraInfo);
+       
+
+        [DllImport("kernel32.dll")] static extern IntPtr GetConsoleWindow();
+        [DllImport("user32.dll")] static extern bool ShowWindow(IntPtr h, int cmd);
+
 
         const byte VK_RETURN = 0x0D;
 
+
+        [DllImport("user32.dll")] static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, nuint dwExtraInfo);
+
         static void ReleaseConsolePrompt()
         {
+            Console.WriteLine();  // force another line break so that the prompt is on a new line
             FreeConsole();
             keybd_event(VK_RETURN, 0, 0, 0);         // key down
             keybd_event(VK_RETURN, 0, 0x0002, 0);    // key up (KEYEVENTF_KEYUP)

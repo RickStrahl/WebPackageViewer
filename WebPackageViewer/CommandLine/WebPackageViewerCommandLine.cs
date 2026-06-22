@@ -64,7 +64,7 @@ namespace WebPackageViewer.CommandLine
         {
             try
             {
-                Console.OutputEncoding = Encoding.UTF8;
+                Console.OutputEncoding = Encoding.UTF8;               
             }
             catch { }
 
@@ -100,7 +100,7 @@ namespace WebPackageViewer.CommandLine
 
 
             var first = FirstParameter?.ToLowerInvariant() ?? string.Empty;
-            if (first.StartsWith("-"))
+            if (first.StartsWith("-") && !(first == "--help" || first == "-help"))
                 first = string.Empty; // ignore any switches - only folder or commands are valid
             if (!string.IsNullOrEmpty(first))
                 first = Environment.ExpandEnvironmentVariables(first);
@@ -134,7 +134,8 @@ namespace WebPackageViewer.CommandLine
                 ColorConsole.WriteLine(OutputPath, ConsoleColor.DarkYellow);
                 return;
             }
-            else if (first == "unpackage")
+
+            if (first == "unpackage")
             {
                 ConsoleHelper.WriteWrappedHeader("West Wind Web Package Viewer");
                 Console.WriteLine("📦 Unpackaging zip file...");
@@ -153,7 +154,7 @@ namespace WebPackageViewer.CommandLine
                 return;
                 // don't return here - we might want to run the unpackaged site        
             }
-            else if (first == "help" || first == "?" || first == "/?")
+            if (first == "help" || first == "?" || first == "/?" || first == "--help" || first == "-help")
             {
                 var version = typeof(MainWindow).Assembly.GetName().Version;
                 ConsoleHelper.WriteWrappedHeader("West Wind Web Package Viewer v" + version.Major + "." + version.Minor + "." + version.Build);
